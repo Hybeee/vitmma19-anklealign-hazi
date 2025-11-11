@@ -1,4 +1,6 @@
 import os
+import logging
+
 import matplotlib.pyplot as plt
 
 def save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy):
@@ -24,3 +26,23 @@ def save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy):
     plt.legend()
     plt.grid(True)
     plt.savefig(os.path.join(args.output_dir, 'accuracy_curve.png'))
+
+def get_logger(timestamp: str, log_dir: str="logs"):
+    os.makedirs(log_dir, exist_ok=True)
+
+    logger = logging.getLogger(timestamp)
+    logger.setLevel(logging.INFO)
+
+    if not logger.handlers:
+        ch = logging.StreamHandler()
+        ch.setLevel(logging.INFO)
+        formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] - %(message)s')
+        ch.setFormatter(formatter)
+        logger.addHandler(ch)
+
+        fh = logging.FileHandler(os.path.join(log_dir, f"{timestamp}.log"))
+        fh.setLevel(logging.INFO)
+        fh.setFormatter(formatter)
+        logger.addHandler(fh)
+
+    return logger

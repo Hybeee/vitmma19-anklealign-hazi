@@ -4,8 +4,10 @@ import matplotlib.pyplot as plt
 
 import os
 from datetime import datetime
+import argparse
 
 from config import Args as Args
+import utils as utils
 
 def setup_optimizer(args, model):
     if args.optimizer == "adam":
@@ -110,18 +112,24 @@ def train(args, train_loader, val_loader, model, optimizer):
         
         if no_improvement == args.early_stopping:
             logger.info(f"Early stopping threshold reached. Training completed.")
-            save_plots(train_loss, train_accuracy, val_loss, val_accuracy) # TODO: implement
+            utils.save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy) # TODO: implement
             return
     
     logger.info("Training completed.")
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--timestamp", type=str, required=True)
+    args_cli = parser.parse_args()
+    timestamp = args_cli.timestamp
+
     args = Args()
+    args.logger = utils.get_logger(timestamp=timestamp, log_dir=args.output_dir)
 
     # TODO: model init
     model = None
 
-    optimizer = setup_optimizer(model=model)
+    optimizer = setup_optimizer(args=args, model=model)
 
     train_loader, val_loader = get_loader() # TODO: implement, will be in data_utils.py probably
 
