@@ -15,5 +15,7 @@ class Args:
         self.model_dir = "tbd"
         self.data_dir = "tbd"
 
-        self.f_loss = torch.nn.CrossEntropyLoss
+        self.f_loss = torch.nn.CrossEntropyLoss()
         self.optimizer = "adam"
+
+        self.logger = None

@@ -7,16 +7,16 @@ from datetime import datetime
 
 from config import Args as Args
 
-def setup_optimizer(model):
-    if Args.optimizer == "adam":
-        return torch.optim.Adam(model.parameters(), lr=Args.lr)
+def setup_optimizer(args, model):
+    if args.optimizer == "adam":
+        return torch.optim.Adam(model.parameters(), lr=args.lr)
 
-def train(train_loader, val_loader, model, optimizer):
-    logger = Args.logger
+def train(args, train_loader, val_loader, model, optimizer):
+    logger = args.logger
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    device = Args.device
-    f_loss = Args.f_loss
+    device = args.device
+    f_loss = args.f_loss
 
     min_loss = np.inf
     no_improvement = 0
@@ -27,7 +27,7 @@ def train(train_loader, val_loader, model, optimizer):
     val_loss = list()
     val_accuracy = list()
 
-    for e in range(Args.epochs):
+    for e in range(args.epochs):
         running_loss, running_accuracy = 0.0, 0.0
         total, correct = 0, 0
 
@@ -96,26 +96,28 @@ def train(train_loader, val_loader, model, optimizer):
             min_loss = val_loss[-1]
             no_improvement = 0
 
-            logger.info(f"Validation loss has decreased. Saving model to: {Args.model_dir}")
+            logger.info(f"Validation loss has decreased. Saving model to: {args.model_dir}")
 
             model.to("cpu")
-            if not os.path.exists(Args.model_dir):
-                os.makedirs(Args.model_dir)
+            if not os.path.exists(args.model_dir):
+                os.makedirs(args.model_dir)
             
-            torch.save(model, os.path.join(Args.model_dir, f"model_{timestamp}.pth"))
+            torch.save(model, os.path.join(args.model_dir, f"model_{timestamp}.pth"))
             model.to(device)
         else:
             no_improvement += 1
             logger.info(f"Validation loss has not decreased.")
         
-        if no_improvement == Args.early_stopping:
+        if no_improvement == args.early_stopping:
             logger.info(f"Early stopping threshold reached. Training completed.")
-            save_plots(Args, train_loss, train_accuracy, val_loss, val_accuracy) # TODO: implement
+            save_plots(train_loss, train_accuracy, val_loss, val_accuracy) # TODO: implement
             return
     
     logger.info("Training completed.")
 
 def main():
+    args = Args()
+
     # TODO: model init
     model = None
 
@@ -123,5 +125,6 @@ def main():
 
     train_loader, val_loader = get_loader() # TODO: implement, will be in data_utils.py probably
 
-    train(train_loader=train_loader, val_loader=val_loader,
+    train(args=args,
+          train_loader=train_loader, val_loader=val_loader,
           model=model, optimizer=optimizer)

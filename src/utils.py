@@ -1,10 +1,8 @@
 import os
 import matplotlib.pyplot as plt
 
-from config import Args
-
-def save_plots(train_loss, train_accuracy, val_loss, val_accuracy):
-    os.makedirs(Args.output_dir, exist_ok=True)
+def save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy):
+    os.makedirs(args.output_dir, exist_ok=True)
 
     plt.figure()
     plt.plot(train_loss, label='Train Loss', color='Green')
@@ -14,7 +12,7 @@ def save_plots(train_loss, train_accuracy, val_loss, val_accuracy):
     plt.title('Training and Validation Loss')
     plt.legend()
     plt.grid(True)
-    plt.savefig(os.path.join(Args.output_dir, 'loss_curve.png'))
+    plt.savefig(os.path.join(args.output_dir, 'loss_curve.png'))
     plt.close()
 
     plt.figure()
@@ -25,4 +23,4 @@ def save_plots(train_loss, train_accuracy, val_loss, val_accuracy):
     plt.title('Training and Validation Accuracy')
     plt.legend()
     plt.grid(True)
-    plt.savefig(os.path.join(Args.output_dir, 'accuracy_curve.png'))
+    plt.savefig(os.path.join(args.output_dir, 'accuracy_curve.png'))
