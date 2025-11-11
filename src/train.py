@@ -5,39 +5,18 @@ import matplotlib.pyplot as plt
 import os
 from datetime import datetime
 
-def save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy):
-    os.makedirs(args.output_dir, exist_ok=True)
+from config import Args as Args
 
-    plt.figure()
-    plt.plot(train_loss, label='Train Loss', color='Green')
-    plt.plot(val_loss, label='Validation Loss', color='Blue')
-    plt.xlabel('Epoch')
-    plt.ylabel('Loss')
-    plt.title('Training and Validation Loss')
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(os.path.join(args.output_dir, 'loss_curve.png'))
-    plt.close()
+def setup_optimizer(model):
+    if Args.optimizer == "adam":
+        return torch.optim.Adam(model.parameters(), lr=Args.lr)
 
-    plt.figure()
-    plt.plot(train_accuracy, label='Train Accuracy', color='Green')
-    plt.plot(val_accuracy, label='Validation Accuracy', color='Blue')
-    plt.xlabel('Epoch')
-    plt.ylabel('Accuracy')
-    plt.title('Training and Validation Accuracy')
-    plt.legend()
-    plt.grid(True)
-    plt.savefig(os.path.join(args.output_dir, 'accuracy_curve.png'))
-
-def train(args, model):
-    logger = args.logger
+def train(train_loader, val_loader, model, optimizer):
+    logger = Args.logger
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
-    train_loader, val_loader = get_loader(args) # TODO: implement, will be in data_utils.py probably
-
-    device = args.device
-    optimizer = args.optimizer
-    f_loss = args.f_loss
+    device = Args.device
+    f_loss = Args.f_loss
 
     min_loss = np.inf
     no_improvement = 0
@@ -48,7 +27,7 @@ def train(args, model):
     val_loss = list()
     val_accuracy = list()
 
-    for e in range(args.epochs):
+    for e in range(Args.epochs):
         running_loss, running_accuracy = 0.0, 0.0
         total, correct = 0, 0
 
@@ -117,21 +96,32 @@ def train(args, model):
             min_loss = val_loss[-1]
             no_improvement = 0
 
-            logger.info(f"Validation loss has decreased. Saving model to: {args.model_dir}")
+            logger.info(f"Validation loss has decreased. Saving model to: {Args.model_dir}")
 
             model.to("cpu")
-            if not os.path.exists(args.model_dir):
-                os.makedirs(args.model_dir)
+            if not os.path.exists(Args.model_dir):
+                os.makedirs(Args.model_dir)
             
-            torch.save(model, os.path.join(args.model_dir, f"model_{timestamp}.pth"))
+            torch.save(model, os.path.join(Args.model_dir, f"model_{timestamp}.pth"))
             model.to(device)
         else:
             no_improvement += 1
             logger.info(f"Validation loss has not decreased.")
         
-        if no_improvement == args.early_stopping:
+        if no_improvement == Args.early_stopping:
             logger.info(f"Early stopping threshold reached. Training completed.")
-            save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy) # TODO: implement
+            save_plots(Args, train_loss, train_accuracy, val_loss, val_accuracy) # TODO: implement
             return
     
     logger.info("Training completed.")
+
+def main():
+    # TODO: model init
+    model = None
+
+    optimizer = setup_optimizer(model=model)
+
+    train_loader, val_loader = get_loader() # TODO: implement, will be in data_utils.py probably
+
+    train(train_loader=train_loader, val_loader=val_loader,
+          model=model, optimizer=optimizer)
