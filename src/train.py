@@ -7,6 +7,7 @@ from datetime import datetime
 import argparse
 
 from config import Args as Args
+from data_processing import get_loader
 import utils as utils
 
 def setup_optimizer(args, model):
@@ -131,7 +132,8 @@ def main():
 
     optimizer = setup_optimizer(args=args, model=model)
 
-    train_loader, val_loader = get_loader() # TODO: implement, will be in data_utils.py probably
+    train_loader = get_loader(args, "train", None, None) # TODO: switch to actual data when available
+    val_loader = get_loader(args, "val", None, None) # TODO: switch to actual data when available
 
     train(args=args,
           train_loader=train_loader, val_loader=val_loader,

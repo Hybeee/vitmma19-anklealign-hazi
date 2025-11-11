@@ -11,11 +11,19 @@ class Args:
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
+        self.f_loss = torch.nn.CrossEntropyLoss()
+        self.optimizer = "adam"
+
+        self.resolution = 224
+        self.cj_brightness = 0.2
+        self.cj_contrast = 0.2
+        self.cj_saturation = 0.2
+        self.rotation = 15
+        self.norm_mean = [0.5, 0.5, 0.5]
+        self.norm_std = [0.5, 0.5, 0.5]
+
         self.output_dir = "tbd"
         self.model_dir = "tbd"
         self.data_dir = "tbd"
-
-        self.f_loss = torch.nn.CrossEntropyLoss()
-        self.optimizer = "adam"
 
         self.logger = None
