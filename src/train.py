@@ -63,7 +63,7 @@ def train(args, model):
 
             outputs = model(images)
 
-            loss = f_loss(outputs, labels)
+            loss = f_loss(outputs, torch.argmax(labels, dim=1)) # f_loss will be torch.nn.CrossEntropy
             running_loss += loss.item()
 
             _, pred_class = torch.max(outputs, 1)
@@ -96,7 +96,7 @@ def train(args, model):
 
                 outputs = model(images)
 
-                loss = f_loss(outputs, labels)
+                loss = f_loss(outputs, torch.argmax(labels, dim=1)) # f_loss will be torch.nn.CrossEntropy
                 running_loss += loss.item()
 
                 _, pred_class = torch.max(outputs, 1)
