@@ -7,6 +7,7 @@ from config import Args
 import utils
 
 import argparse
+import os
 
 class AnkleAlignDataset(Dataset):
     def __init__(self, images, labels, transform):
@@ -68,7 +69,10 @@ def main():
     timestamp = args_cli.timestamp
 
     args = Args()
-    args.logger = utils.get_logger(timestamp=timestamp, log_dir=args.output_dir)
+    args.output_dir = os.path.join("output", timestamp)
+
+    log_dir = args.output_dir
+    args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
 
 if __name__ == "__main__":
     main()

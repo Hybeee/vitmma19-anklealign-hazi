@@ -8,6 +8,7 @@ import utils
 
 import os
 import argparse
+import json
 
 def _save_conf_mx_plot(args: Args, conf_mx, normalize=False):
     save_name = "conf_mx_normalized" if normalize else "conf_mx" 
@@ -34,7 +35,7 @@ def _save_conf_mx_plot(args: Args, conf_mx, normalize=False):
     plt.ylabel("True Label")
     plt.xlabel("Predicted Label")
     plt.savefig()
-    plt.close(os.path.join(""))
+    plt.close(os.path.join(args.output_dir, "plots", f"{save_name}.png"))
 
 def save_result(args: Args, result, timestamp):
     results = \
@@ -71,7 +72,11 @@ def save_result(args: Args, result, timestamp):
         }
     }
 
-    _save_conf_mx_plot(args, result['conf_mx'])
+    with open(os.path.join(args.output_dir, "results.json"), 'w') as file:
+        json.dump(results, file, indent=2)
+
+    _save_conf_mx_plot(args, result['conf_mx'], normalize=False)
+    _save_conf_mx_plot(args, result['conf_mx'], normalize=True)
 
 def evaluate_model(args: Args, model, eval_loader):
     model.eval()

@@ -14,7 +14,7 @@ def setup_optimizer(args, model):
     if args.optimizer == "adam":
         return torch.optim.Adam(model.parameters(), lr=args.lr)
 
-def train(args, train_loader, val_loader, model, optimizer):
+def train(args: Args, train_loader, val_loader, model, optimizer):
     logger = args.logger
     timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
@@ -102,10 +102,8 @@ def train(args, train_loader, val_loader, model, optimizer):
             logger.info(f"Validation loss has decreased. Saving model to: {args.model_dir}")
 
             model.to("cpu")
-            if not os.path.exists(args.model_dir):
-                os.makedirs(args.model_dir)
             
-            torch.save(model, os.path.join(args.model_dir, f"model_{timestamp}.pth"))
+            torch.save(model, os.path.join(args.output_dir, f"model.pth"))
             model.to(device)
         else:
             no_improvement += 1
@@ -113,7 +111,7 @@ def train(args, train_loader, val_loader, model, optimizer):
         
         if no_improvement == args.early_stopping:
             logger.info(f"Early stopping threshold reached. Training completed.")
-            utils.save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy) # TODO: implement
+            utils.save_plots(args, train_loss, train_accuracy, val_loss, val_accuracy)
             return
     
     logger.info("Training completed.")
@@ -125,7 +123,10 @@ def main():
     timestamp = args_cli.timestamp
 
     args = Args()
-    args.logger = utils.get_logger(timestamp=timestamp, log_dir=args.output_dir)
+    args.output_dir = os.path.join("output", timestamp)
+
+    log_dir = args.output_dir
+    args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
 
     # TODO: model init
     model = None
