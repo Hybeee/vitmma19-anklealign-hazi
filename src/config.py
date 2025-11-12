@@ -4,6 +4,8 @@ import logging
 
 class Args:
     def __init__(self):
+        self.classes = [] # TODO: fill up
+
         self.epochs = 100
         self.batch_size = 32
         self.lr = 1e-4

@@ -46,3 +46,7 @@ def get_logger(timestamp: str, log_dir: str="logs"):
         logger.addHandler(fh)
 
     return logger
+
+def load_model(model_path: str):
+    # TODO
+    pass

@@ -138,3 +138,6 @@ def main():
     train(args=args,
           train_loader=train_loader, val_loader=val_loader,
           model=model, optimizer=optimizer)
+    
+if __name__ == "__main__":
+    main()

@@ -4,6 +4,9 @@ from torchvision import transforms
 from PIL import Image
 
 from config import Args
+import utils
+
+import argparse
 
 class AnkleAlignDataset(Dataset):
     def __init__(self, images, labels, transform):
@@ -57,3 +60,15 @@ def get_loader(args: Args, split: str,
                                  shuffle=False)
         
         return data_loader
+    
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--timestamp", type=str, required=True)
+    args_cli = parser.parse_args()
+    timestamp = args_cli.timestamp
+
+    args = Args()
+    args.logger = utils.get_logger(timestamp=timestamp, log_dir=args.output_dir)
+
+if __name__ == "__main__":
+    main()
