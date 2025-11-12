@@ -69,7 +69,7 @@ def main():
     timestamp = args_cli.timestamp
 
     args = Args()
-    args.output_dir = os.path.join("output", timestamp)
+    args.output_dir = os.path.join("outputs", timestamp)
 
     log_dir = args.output_dir
     args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)

@@ -24,7 +24,7 @@ class Args:
         self.norm_mean = [0.5, 0.5, 0.5]
         self.norm_std = [0.5, 0.5, 0.5]
 
-        self.output_dir = "output"
+        self.output_dir = "outputs"
         self.data_dir = "data"
 
         self.logger = None

@@ -16,7 +16,6 @@ def setup_optimizer(args, model):
 
 def train(args: Args, train_loader, val_loader, model, optimizer):
     logger = args.logger
-    timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
 
     device = args.device
     f_loss = args.f_loss
@@ -45,7 +44,7 @@ def train(args: Args, train_loader, val_loader, model, optimizer):
 
             outputs = model(images)
 
-            loss = f_loss(outputs, torch.argmax(labels, dim=1)) # f_loss will be torch.nn.CrossEntropy
+            loss = f_loss(outputs, torch.argmax(labels, dim=1))
             running_loss += loss.item()
 
             _, pred_class = torch.max(outputs, 1)
@@ -99,7 +98,7 @@ def train(args: Args, train_loader, val_loader, model, optimizer):
             min_loss = val_loss[-1]
             no_improvement = 0
 
-            logger.info(f"Validation loss has decreased. Saving model to: {args.model_dir}")
+            logger.info(f"Validation loss has decreased. Saving model to: {args.output_dir}")
 
             model.to("cpu")
             
@@ -123,7 +122,7 @@ def main():
     timestamp = args_cli.timestamp
 
     args = Args()
-    args.output_dir = os.path.join("output", timestamp)
+    args.output_dir = os.path.join("outputs", timestamp)
 
     log_dir = args.output_dir
     args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
