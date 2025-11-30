@@ -50,7 +50,7 @@ def get_logger(timestamp: str, log_dir: str="logs"):
     return logger
 
 def plot_label_distribution(args: Args, class_counts, output_plots_dir):
-    labels = sorted([int(k) for k in class_counts.keys()])
+    labels = sorted([k for k in class_counts.keys()])
     counts = [class_counts[label] for label in labels]
 
     total = sum(counts)
