@@ -16,6 +16,9 @@ class Args:
             'Szupinacio': 2
         }
 
+        self.similarity_threshold = 1e-4
+        self.save_dupes = True
+
         self.epochs = 100
         self.batch_size = 32
         self.lr = 1e-4

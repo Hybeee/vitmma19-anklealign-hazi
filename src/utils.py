@@ -92,6 +92,26 @@ def plot_aspect_ratio(aspect_ratios, output_plots_dir):
     plt.savefig(os.path.join(output_plots_dir, "aspect_ratio_distribution.png"))
     plt.close()
 
+def save_dupes(images, i, j, output_plots_dir):
+    dupes_plot_dir = os.path.join(output_plots_dir, "dupes")
+    os.makedirs(dupes_plot_dir, exist_ok=True)
+
+    fig, axes = plt.subplots(1, 2, figsize=(10, 5))
+    
+    axes[0].imshow(images[i])
+    axes[0].set_title(f"Original (Index {i})")
+    axes[0].axis('off')
+    
+    axes[1].imshow(images[j])
+    axes[1].set_title(f"Duplicate (Index {j}) - EXCLUDED")
+    axes[1].axis('off')
+    
+    fig.suptitle(f"Duplicate Pair: Index {i} vs Index {j}", fontsize=16)
+
+    plot_filename = f"dupe_{i}_vs_{j}.png"
+    plt.savefig(os.path.join(dupes_plot_dir, plot_filename))
+    plt.close(fig)
+
 def load_model(model_path: str):
     # TODO
     pass
