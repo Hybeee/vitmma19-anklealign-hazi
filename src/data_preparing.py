@@ -68,6 +68,7 @@ def main():
             for point in data:
                 data_count += 1
                 try:
+                    image_path = "N/A"
                     image_name = point["file_upload"][9:]
 
                     if dir_name == "H51B9J":

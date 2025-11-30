@@ -112,6 +112,15 @@ def save_dupes(images, i, j, output_plots_dir):
     plt.savefig(os.path.join(dupes_plot_dir, plot_filename))
     plt.close(fig)
 
+def save_lq(img, idx, reason, output_plots_dir):
+    lq_images_dir = os.path.join(output_plots_dir, "lq_images")
+    os.makedirs(lq_images_dir, exist_ok=True)
+
+    plt.imshow(img)
+    plt.title(reason)
+    plt.savefig(os.path.join(lq_images_dir, f"img_{idx}.png"))
+    plt.close()
+
 def load_model(model_path: str):
     # TODO
     pass

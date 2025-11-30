@@ -18,6 +18,10 @@ class Args:
 
         self.similarity_threshold = 1e-4
         self.save_dupes = True
+        self.sharpness_threshold = 40
+        self.min_contrast_std = 10.0
+        self.min_brightness_mean = 40.0
+        self.save_lq = True
 
         self.epochs = 100
         self.batch_size = 32
