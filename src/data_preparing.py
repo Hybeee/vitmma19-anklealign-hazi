@@ -59,6 +59,7 @@ def main():
             if len(json_paths) > 0:
                 json_path = json_paths[0]
             else:
+                args.logger.warning(f"Skipping {dir_name}. Warning: No JSON found in directory.")
                 continue
 
             with open(json_path, 'r') as file:
@@ -83,7 +84,7 @@ def main():
 
                     if image is None:
                         args.logger.warning(f"Skipping: {image_path}. Error: Image cannot be read, file is possibly corrupted.")
-                        continue
+                        continue  
 
                     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                     aspect_ratio = image.shape[0]/image.shape[1]
