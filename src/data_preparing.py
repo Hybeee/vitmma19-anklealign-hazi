@@ -101,7 +101,7 @@ def main():
     args.logger.info(f"Image array shape: {X.shape}")
     args.logger.info(f"Label array shape: {Y.shape}")
 
-    utils.plot_label_distribution(class_counts, output_plots_dir)
+    utils.plot_label_distribution(args, class_counts, output_plots_dir)
     utils.plot_aspect_ratio(aspect_ratios, output_plots_dir)
 
 

@@ -7,6 +7,9 @@ mkdir -p data outputs
 mkdir -p outputs/$timestamp
 mkdir -p outputs/$timestamp/plots
 
+echo "Running data preparation..."
+python data_preparing.py --timestamp $timestamp
+
 echo "Running data processing..."
 python data_processing.py --timestamp $timestamp
 

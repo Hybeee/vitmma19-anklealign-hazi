@@ -2,6 +2,7 @@ import os
 import logging
 
 import matplotlib.pyplot as plt
+import numpy as np
 
 from config import Args
 
@@ -47,6 +48,49 @@ def get_logger(timestamp: str, log_dir: str="logs"):
         logger.addHandler(fh)
 
     return logger
+
+def plot_label_distribution(args: Args, class_counts, output_plots_dir):
+    labels = sorted([int(k) for k in class_counts.keys()])
+    counts = [class_counts[label] for label in labels]
+
+    total = sum(counts)
+
+    x_labels = [f'{args.classes[label]}' for label in labels]
+
+    plt.figure(figsize=(7, 5))
+    bars = plt.bar(x_labels, counts, color=['#1f77b4', '#ff7f0e', '#2ca02c'])
+
+    plt.title("AnkleAlign Dataset Class Distribution")
+    plt.xlabel("Ankle Alignment Class")
+    plt.ylabel("Number of Samples")
+    plt.xticks(rotation=0)
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+
+    for bar in bars:
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width() / 2, height + (total * 0.01),
+                 f'{int(height)}',
+                 ha='center', va='bottom')
+    
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_plots_dir, "label_distribution.png"))
+    plt.close()
+
+def plot_aspect_ratio(aspect_ratios, output_plots_dir):
+    plt.figure(figsize=(7, 5))
+    plt.hist(aspect_ratios, bins=25, color='#8c564b', edgecolor='black', alpha=0.7)
+    mean_ratio = np.mean(aspect_ratios)
+    plt.axvline(mean_ratio, color='r', linestyle='dashed', linewidth=1, label=f'Mean Ratio: {mean_ratio:.2f}')
+
+    plt.title("Distribution of Original Image Aspect Ratios")
+    plt.xlabel("Aspect Ration (Height/Width)")
+    plt.ylabel("Frequency")
+    plt.legend()
+    plt.grid(axis='y', linestyle='--', alpha=0.6)
+
+    plt.tight_layout()
+    plt.savefig(os.path.join(output_plots_dir, "aspect_ratio_distribution.png"))
+    plt.close()
 
 def load_model(model_path: str):
     # TODO

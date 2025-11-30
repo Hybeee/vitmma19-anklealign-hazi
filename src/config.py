@@ -4,7 +4,17 @@ import logging
 
 class Args:
     def __init__(self):
-        self.classes = [] # TODO: fill up
+        self.classes = {
+            0: 'Pronacio',
+            1: 'Neutralis',
+            2: 'Szupinacio'
+        }
+
+        self.reverse_classes = {
+            'Pronacio': 0,
+            'Neutralis': 1,
+            'Szupinacio': 2
+        }
 
         self.epochs = 100
         self.batch_size = 32
