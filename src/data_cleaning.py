@@ -137,7 +137,7 @@ def main():
     images, labels = exclude_duplicates(args, images, labels, output_plots_dir)
     images, labels = exclude_low_quality_images(args, images, labels, output_plots_dir)
 
-    cleaned_np_dir = os.path.join(args.output_dir, "cleaned_numpy_data")
+    cleaned_np_dir = os.path.join(args.data_dir, "cleaned_numpy_data")
     os.makedirs(cleaned_np_dir, exist_ok=True)
 
     args.logger.info("Finished data cleaning")
