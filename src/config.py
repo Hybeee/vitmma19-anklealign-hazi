@@ -4,6 +4,10 @@ import logging
 
 class Args:
     def __init__(self):
+        self.seed = 42
+
+        self.model_name = "dummy_baseline"
+
         self.classes = {
             0: 'Pronacio',
             1: 'Neutralis',
@@ -23,6 +27,15 @@ class Args:
         self.min_brightness_mean = 40.0
         self.save_lq = True
 
+        self.save_split_results = True
+        self.resolution = 224
+        self.cj_brightness = 0.2
+        self.cj_contrast = 0.2
+        self.cj_saturation = 0.2
+        self.rotation = 15
+        self.norm_mean = [0.5, 0.5, 0.5]
+        self.norm_std = [0.5, 0.5, 0.5]
+
         self.epochs = 100
         self.batch_size = 32
         self.lr = 1e-4
@@ -32,14 +45,6 @@ class Args:
 
         self.f_loss = torch.nn.CrossEntropyLoss()
         self.optimizer = "adam"
-
-        self.resolution = 224
-        self.cj_brightness = 0.2
-        self.cj_contrast = 0.2
-        self.cj_saturation = 0.2
-        self.rotation = 15
-        self.norm_mean = [0.5, 0.5, 0.5]
-        self.norm_std = [0.5, 0.5, 0.5]
 
         self.output_dir = "outputs"
         self.data_dir = "data"

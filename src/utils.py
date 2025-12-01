@@ -1,5 +1,6 @@
 import os
 import logging
+from collections import Counter
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -120,6 +121,60 @@ def save_lq(img, idx, reason, output_plots_dir):
     plt.title(reason)
     plt.savefig(os.path.join(lq_images_dir, f"img_{idx}.png"))
     plt.close()
+
+def save_split_results(args: Args, Y_train, Y_val, Y_test,
+                       output_plots_dir):
+    train_counts = Counter(Y_train)
+    val_counts = Counter(Y_val)
+    test_counts = Counter(Y_test)
+
+    class_indices = sorted(args.classes.keys())
+    class_names = [args.classes[i] for i in class_indices]
+
+    data = np.array([
+        [train_counts.get(i, 0) for i in class_indices],
+        [val_counts.get(i, 0) for i in class_indices],
+        [test_counts.get(i, 0) for i in class_indices]
+    ]).T
+
+    split_names = ['Train', 'Validation', 'Test']
+
+    x = np.arange(len(class_names))
+    width = 0.25
+
+    fig, ax = plt.subplots(figsize=(10, 6))
+
+    colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
+
+    rects1 = ax.bar(x - width, data[:, 0], width, label=split_names[0], color=colors[0])
+    rects2 = ax.bar(x, data[:, 1], width, label=split_names[1], color=colors[1])
+    rects3 = ax.bar(x + width, data[:, 2], width, label=split_names[2], color=colors[2])
+
+    ax.set_ylabel("Number of Samples")
+    ax.set_xlabel("Ankle Alignment Class")
+    ax.set_title("Class Distribution Accross Data Splits (Train, Validation, Test)")
+    ax.set_xticks(x)
+    ax.set_xticklabels(class_names)
+    ax.legend(loc='upper right')
+    ax.grid(axis='y', linestyle='--', alpha=0.6)
+
+    def autolabel(rects, i):
+        for rect in rects:
+            height = rect.get_height()
+            ax.annotate(f'{int(height)} - {((int(height) / data[:, i].sum()) * 100):.2f}%',
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 3),
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+            
+    autolabel(rects1, 0)
+    autolabel(rects2, 1)
+    autolabel(rects3, 2)
+
+    fig.tight_layout()
+
+    plt.savefig(os.path.join(output_plots_dir, "split_class_distribution.png"))
+    plt.close(fig)
 
 def load_model(model_path: str):
     # TODO
