@@ -33,7 +33,7 @@ def _evaluate_dummy(args: Args, model: DummyBaseLine, data_loader, split_name="t
         loss = f_loss(outputs, labels)
         running_loss += loss.item()
 
-        pred_class = torch.argmax(outputs, 1)
+        _, pred_class = torch.max(outputs, 1)
         label_class = labels
         total += labels.size(0)
         correct += (pred_class == label_class).sum().item()

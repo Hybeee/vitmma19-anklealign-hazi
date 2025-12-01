@@ -5,45 +5,25 @@ import matplotlib.pyplot as plt
 
 from config import Args
 import utils
+from models import get_model
+from data_processing import get_loader
 
 import os
 import argparse
 import json
 
-def _save_conf_mx_plot(args: Args, conf_mx, normalize=False):
-    save_name = "conf_mx_normalized" if normalize else "conf_mx" 
-
-    if normalize:
-        conf_mx = conf_mx.astype('float') / conf_mx.sum(axis=1)[:, np.newaxis]
-    
-    plt.figure(figsize=(8, 6))
-    plt.imshow(conf_mx, interpolation='nearest', cmap=plt.cm.Blues)
-    plt.title('Confusion Matrix')
-    plt.colorbar()
-    tick_marks = np.arange(len(args.classes))
-    plt.xticks(tick_marks, [args.classes[i] for i in range(len(args.classes))], rotation=45)
-    plt.yticks(tick_marks, [args.classes[i] for i in range(len(args.classes))])
-
-    fmt = '.2f' if normalize else 'd'
-    thresh = conf_mx.max() / 2
-    for i in range(conf_mx.shape[0]):
-        for j in range(conf_mx.shape[1]):
-            plt.text(j, i, format(conf_mx[i, j], fmt),
-                     ha="center", va="center",
-                     color="white" if conf_mx[i, j] > thresh else "black")
-    plt.tight_layout()
-    plt.ylabel("True Label")
-    plt.xlabel("Predicted Label")
-    plt.savefig()
-    plt.close(os.path.join(args.output_dir, "plots", f"{save_name}.png"))
-
 def save_result(args: Args, result, timestamp):
     results = \
     {
         "timestamp": timestamp,
-        "accuracy": result['accuracy'],
-        "loss": result['loss'],
-        "confusion_matrix": result['conf_mx'].tolist(),
+        "model_name": args.model_name,
+        "classes": args.classes,
+        "data_cleaning": {
+            "similarity_threshold": args.similarity_threshold,
+            "sharpness_threshold": args.sharpness_threshold,
+            "min_contrast_std": args.min_contrast_std,
+            "min_brightness_mean": args.min_brightness_mean
+        },
         "hyperparameters": 
         {
             "learning_rate": args.lr,
@@ -69,14 +49,19 @@ def save_result(args: Args, result, timestamp):
                     "normalization_std": args.norm_std
                 }
             }
+        },
+        "evaluation": {
+            "accuracy": result['accuracy'],
+            "avg_loss": result['avg_loss'],
+            "confusion_matrix": result['conf_mx'].tolist(),
         }
     }
 
     with open(os.path.join(args.output_dir, "results.json"), 'w') as file:
         json.dump(results, file, indent=2)
 
-    _save_conf_mx_plot(args, result['conf_mx'], normalize=False)
-    _save_conf_mx_plot(args, result['conf_mx'], normalize=True)
+    utils.save_conf_mx_plot(args, result['conf_mx'], normalize=False)
+    utils.save_conf_mx_plot(args, result['conf_mx'], normalize=True)
 
 def evaluate_model(args: Args, model, eval_loader):
     model.eval()
@@ -99,17 +84,17 @@ def evaluate_model(args: Args, model, eval_loader):
 
             outputs = model(images)
 
-            loss = args.f_loss(outputs, torch.argmax(labels, dim=1))
+            loss = args.f_loss(outputs, labels)
             running_loss += loss.item()
 
-            _, predicted = torch.max(outputs, dim=1)
-            _, label = torch.max(labels, dim=1)
+            _, pred_class = torch.max(outputs, dim=1)
+            label_class = labels
 
             total += labels.size(0)
-            correct += (predicted == label).sum().item()
+            correct += (pred_class == label_class).sum().item()
 
-            all_targets.extend(label.cpu().numpy())
-            all_predictions.extend(predicted.cpu().numpy())
+            all_targets.extend(label_class.cpu().numpy())
+            all_predictions.extend(pred_class.cpu().numpy())
     
     avg_loss = running_loss / len(eval_loader)
     accuracy = correct / total
@@ -137,9 +122,24 @@ def main():
     log_dir = args.output_dir
     args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
 
-    model = utils.load_model()
+    train_labels = None
 
-    result = evaluate_model(arsg=args, model=model)
+    if args.model_name.lower() == "dummy_baseline":
+        train_labels = np.load(os.path.join(args.data_dir, "splits", "train_labels.npy"))
+    
+    model = get_model(args, train_labels=train_labels)
+
+    test_images = np.load(os.path.join(args.data_dir, "splits", "test_images.npy"))
+    test_labels = np.load(os.path.join(args.data_dir, "splits", "test_labels.npy"))
+
+    test_loader = get_loader(args, "test",
+                             images=test_images, labels=test_labels)
+
+    args.logger.info(f"Running evaluation on model: {args.model_name}")
+
+    result = evaluate_model(args=args, model=model, eval_loader=test_loader)
+
+    args.logger.info(f"Saving evaluation results and pipeline data to: {args.output_dir}\\results.json")
 
     save_result(args=args, result=result, timestamp=timestamp)
 

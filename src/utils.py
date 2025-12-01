@@ -176,6 +176,33 @@ def save_split_results(args: Args, Y_train, Y_val, Y_test,
     plt.savefig(os.path.join(output_plots_dir, "split_class_distribution.png"))
     plt.close(fig)
 
+def save_conf_mx_plot(args: Args, conf_mx, normalize=False):
+    save_name = "conf_mx_normalized" if normalize else "conf_mx" 
+
+    if normalize:
+        conf_mx = conf_mx.astype('float') / conf_mx.sum(axis=1)[:, np.newaxis]
+    
+    plt.figure(figsize=(8, 6))
+    plt.imshow(conf_mx, interpolation='nearest', cmap=plt.cm.Blues)
+    plt.title('Confusion Matrix')
+    plt.colorbar()
+    tick_marks = np.arange(len(args.classes))
+    plt.xticks(tick_marks, [args.classes[i] for i in range(len(args.classes))], rotation=45)
+    plt.yticks(tick_marks, [args.classes[i] for i in range(len(args.classes))])
+
+    fmt = '.2f' if normalize else 'd'
+    thresh = conf_mx.max() / 2
+    for i in range(conf_mx.shape[0]):
+        for j in range(conf_mx.shape[1]):
+            plt.text(j, i, format(conf_mx[i, j], fmt),
+                     ha="center", va="center",
+                     color="white" if conf_mx[i, j] > thresh else "black")
+    plt.tight_layout()
+    plt.ylabel("True Label")
+    plt.xlabel("Predicted Label")
+    plt.savefig(os.path.join(args.output_dir, "plots", f"{save_name}.png"))
+    plt.close()
+
 def load_model(model_path: str):
     # TODO
     pass
