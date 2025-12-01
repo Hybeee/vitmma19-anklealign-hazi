@@ -173,7 +173,7 @@ def save_split_results(args: Args, Y_train, Y_val, Y_test,
 
     fig.tight_layout()
 
-    plt.savefig(os.path.join(output_plots_dir, "split_class_distribution.png"))
+    plt.savefig(os.path.join(output_plots_dir, "split_label_distribution.png"))
     plt.close(fig)
 
 def save_conf_mx_plot(args: Args, conf_mx, normalize=False):

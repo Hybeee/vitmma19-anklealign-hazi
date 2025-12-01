@@ -55,7 +55,7 @@ def exclude_duplicates(args: Args, images, labels, output_plots_dir):
             if not keep[j]:
                 continue
 
-            if are_images_identical(args, images[i], images[j]):
+            if are_images_identical_distance(args, images[i], images[j]):
                 keep[j] = False
                 duplicate_count += 1
                 duplicate_indices.append([i, j])
