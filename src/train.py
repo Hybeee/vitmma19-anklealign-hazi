@@ -7,7 +7,7 @@ from datetime import datetime
 import argparse
 
 from config import Args as Args
-from data_processing import get_loader
+from data_pipeline.data_processing import get_loader
 import utils as utils
 from models import get_model, DummyBaseLine
 
@@ -87,11 +87,11 @@ def train(args: Args, train_loader, val_loader, model, optimizer):
 
             outputs = model(images)
 
-            loss = f_loss(outputs, torch.argmax(labels, dim=1))
+            loss = f_loss(outputs, labels)
             running_loss += loss.item()
 
             _, pred_class = torch.max(outputs, 1)
-            _, label_class = torch.max(labels, 1)
+            label_class = labels
             total += labels.size(0)
             correct += (pred_class == label_class).sum().item()
 
@@ -120,11 +120,11 @@ def train(args: Args, train_loader, val_loader, model, optimizer):
 
                 outputs = model(images)
 
-                loss = f_loss(outputs, torch.argmax(labels, dim=1)) # f_loss will be torch.nn.CrossEntropy
+                loss = f_loss(outputs, labels) # f_loss will be torch.nn.CrossEntropy
                 running_loss += loss.item()
 
                 _, pred_class = torch.max(outputs, 1)
-                _, label_class = torch.max(labels, 1)
+                label_class = labels
                 total += labels.size(0)
                 correct += (pred_class == label_class).sum().item()
         

@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from config import Args
 import utils
 from models import get_model
-from data_processing import get_loader
+from data_pipeline.data_processing import get_loader
 
 import os
 import argparse

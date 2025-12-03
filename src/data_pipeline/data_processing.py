@@ -5,11 +5,16 @@ from PIL import Image
 from sklearn.model_selection import train_test_split
 import numpy as np
 
-from config import Args
-import utils
-
 import argparse
 import os
+import sys
+
+current_dir = os.path.dirname(os.path.abspath(__file__))
+parent_dir = os.path.dirname(current_dir)
+sys.path.append(parent_dir)
+
+from config import Args
+import utils
 
 class AnkleAlignDataset(Dataset):
     def __init__(self, images, labels, transform):
