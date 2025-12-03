@@ -3,6 +3,8 @@ import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 
+import os
+
 from config import Args
 
 def get_model(args: Args, train_labels=None):
@@ -19,6 +21,18 @@ def get_model(args: Args, train_labels=None):
     else:
         args.logger.error(f"Unknown model name specified in arguments: {args.model_name}")
         return None
+
+def load_trained_model(args: Args, train_labels=None):
+    args.logger.info(f"Loading trained model: {args.model_name}")
+
+    if args.model_name.lower() == "dummy_baseline":
+        if train_labels is None:
+            args.logger.error(f"No labels were given for: {args.model_name}")
+            return None
+        return DummyBaseLine(train_labels=train_labels)
+    else:
+        model = torch.load(os.path.join(args.output_dir, "model.pth"))
+        return model
 
 class DummyBaseLine(nn.Module):
     def __init__(self, train_labels):

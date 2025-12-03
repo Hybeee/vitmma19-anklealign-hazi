@@ -37,7 +37,7 @@ class Args:
         self.norm_std = [0.5, 0.5, 0.5]
 
         self.epochs = 100
-        self.batch_size = 32
+        self.batch_size = 8
         self.lr = 1e-4
         self.early_stopping = 10
 

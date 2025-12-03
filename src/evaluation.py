@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 from config import Args
 import utils
-from models import get_model
+from models import get_model, load_trained_model
 from data_pipeline.data_processing import get_loader
 
 import os
@@ -135,7 +135,7 @@ def main():
     if args.model_name.lower() == "dummy_baseline":
         train_labels = np.load(os.path.join(args.data_dir, "splits", "train_labels.npy"))
     
-    model = get_model(args, train_labels=train_labels)
+    model = load_trained_model(args, train_labels=train_labels)
 
     test_images = np.load(os.path.join(args.data_dir, "splits", "test_images.npy"))
     test_labels = np.load(os.path.join(args.data_dir, "splits", "test_labels.npy"))
