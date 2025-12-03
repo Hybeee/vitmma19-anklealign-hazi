@@ -1,6 +1,6 @@
 import numpy as np
 import torch
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
 
 from config import Args
@@ -54,6 +54,7 @@ def save_result(args: Args, result, timestamp):
             "accuracy": result['accuracy'],
             "avg_loss": result['avg_loss'],
             "confusion_matrix": result['conf_mx'].tolist(),
+            "classification_report": result['classification_report']
         }
     }
 
@@ -99,12 +100,19 @@ def evaluate_model(args: Args, model, eval_loader):
     avg_loss = running_loss / len(eval_loader)
     accuracy = correct / total
 
+    target_names = [args.classes[i] for i in range(len(args.classes))]
     conf_mx = confusion_matrix(all_targets, all_predictions)
+    report = classification_report(y_true=all_targets,
+                                   y_pred=all_predictions,
+                                   target_names=target_names,
+                                   digits=4,
+                                   output_dict=True)
 
     result = {
         "avg_loss": avg_loss,
         "accuracy": accuracy,
-        "conf_mx": conf_mx
+        "conf_mx": conf_mx,
+        "classification_report": report
     }
 
     return result
