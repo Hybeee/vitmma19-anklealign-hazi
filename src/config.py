@@ -6,7 +6,7 @@ class Args:
     def __init__(self):
         self.seed = 42
 
-        self.model_name = "dummy_baseline"
+        self.model_name = "anklealign_simple"
 
         self.classes = {
             0: 'Pronacio',
