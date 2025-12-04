@@ -4,8 +4,6 @@ $timestamp = Get-Date -Format "yyyyMMdd_HHmmss"
 
 New-Item -ItemType Directory -Force -Path ".\data"
 New-Item -ItemType Directory -Force -Path ".\outputs"
-New-Item -ItemType Directory -Force -Path ".\outputs\$timestamp"
-New-Item -ItemType Directory -Force -Path ".\outputs\$timestamp\plots"
 
 # Write-Host "Running data preparation..."
 # python src/data_pipeline/data_preparing.py --timestamp $timestamp

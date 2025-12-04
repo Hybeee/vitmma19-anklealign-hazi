@@ -126,6 +126,10 @@ def main():
 
     args = Args()
     args.output_dir = os.path.join("outputs", f"{timestamp}_{args.model_alias}")
+    output_plots_dir = os.path.join(args.output_dir, "plots")
+
+    os.makedirs(args.output_dir, exist_ok=True)
+    os.makedirs(output_plots_dir, exist_ok=True)
 
     log_dir = args.output_dir
     args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
