@@ -6,7 +6,8 @@ class Args:
     def __init__(self):
         self.seed = 42
 
-        self.model_name = "anklealign_simple"
+        self.model_name = "anklealign_complex"
+        self.model_alias = self._get_name_alias()
 
         self.classes = {
             0: 'Pronacio',
@@ -37,7 +38,7 @@ class Args:
         self.norm_std = [0.5, 0.5, 0.5]
 
         self.epochs = 100
-        self.batch_size = 8
+        self.batch_size = 10
         self.lr = 1e-4
         self.early_stopping = 10
 
@@ -50,3 +51,13 @@ class Args:
         self.data_dir = "data"
 
         self.logger = None
+
+    def _get_name_alias(self):
+        if self.model_name.lower() == "dummy_baseline":
+            return "ds"
+        elif self.model_name.lower() == "anklealign_simple":
+            return "aa_s"
+        elif self.model_name.lower() == "anklealign_complex":
+            return "aa_c"
+        else:
+            return "na"

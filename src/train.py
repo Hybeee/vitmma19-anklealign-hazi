@@ -165,7 +165,7 @@ def main():
     timestamp = args_cli.timestamp
 
     args = Args()
-    args.output_dir = os.path.join("outputs", timestamp)
+    args.output_dir = os.path.join("outputs", f"{timestamp}_{args.model_alias}")
 
     log_dir = args.output_dir
     args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)

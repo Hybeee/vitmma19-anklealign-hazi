@@ -34,7 +34,7 @@ def main():
     timestamp = args_cli.timestamp
 
     args = Args()
-    args.output_dir = os.path.join("outputs", timestamp)
+    args.output_dir = os.path.join("outputs", f"{timestamp}_{args.model_alias}")
     output_plots_dir = os.path.join(args.output_dir, "plots")
 
     log_dir = args.output_dir

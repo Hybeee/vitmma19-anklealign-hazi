@@ -43,7 +43,7 @@ def get_logger(timestamp: str, log_dir: str="logs"):
         ch.setFormatter(formatter)
         logger.addHandler(ch)
 
-        fh = logging.FileHandler(os.path.join(log_dir, f"{timestamp}.log"))
+        fh = logging.FileHandler(os.path.join(log_dir, f"run.log"))
         fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
@@ -202,7 +202,3 @@ def save_conf_mx_plot(args: Args, conf_mx, normalize=False):
     plt.xlabel("Predicted Label")
     plt.savefig(os.path.join(args.output_dir, "plots", f"{save_name}.png"))
     plt.close()
-
-def load_model(model_path: str):
-    # TODO
-    pass
