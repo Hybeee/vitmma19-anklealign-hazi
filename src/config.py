@@ -2,11 +2,18 @@ import torch
 import os
 import logging
 
+MODEL_OPTIONS = {
+    "baseline": "dummy_baseline",
+    "simple": "anklealign_simple",
+    "complex": "anklealign_complex"
+}
+
 class Args:
     def __init__(self):
         self.seed = 42
 
-        self.model_name = "anklealign_complex"
+        self.model_choice = "complex"
+        self.model_name = MODEL_OPTIONS[self.model_choice]
         self.model_alias = self._get_name_alias()
 
         self.classes = {
@@ -44,7 +51,8 @@ class Args:
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 
-        self.f_loss = torch.nn.CrossEntropyLoss()
+        self.loss_name = "ce"
+        self.use_label_weights = True
         self.optimizer = "adam"
 
         self.output_dir = "outputs"

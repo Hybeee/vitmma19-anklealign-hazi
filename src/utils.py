@@ -4,6 +4,7 @@ from collections import Counter
 
 import matplotlib.pyplot as plt
 import numpy as np
+import torch
 
 from config import Args
 
@@ -202,3 +203,42 @@ def save_conf_mx_plot(args: Args, conf_mx, normalize=False):
     plt.xlabel("Predicted Label")
     plt.savefig(os.path.join(args.output_dir, "plots", f"{save_name}.png"))
     plt.close()
+
+def setup_optimizer(args: Args, model):
+    if args.optimizer.lower() == "adam":
+        return torch.optim.Adam(model.parameters(), lr=args.lr)
+    else:
+        args.logger.warning(f"Unknown optimizer: {args.optimizer}. Defaulting to Adam...")
+        return torch.optim.Adam(model.parameters(), lr=args.lr)
+
+def _calculate_label_weights(args: Args, train_labels):
+    num_classes = len(args.classes)
+    class_counts = np.bincount(train_labels)
+    total_samples = len(train_labels)
+
+    weights = []
+    for i, count in enumerate(class_counts):
+        if count > 0:
+            weight = total_samples / (num_classes * count)
+        else:
+            weight = 1.0
+
+        weights.append(weight)
+
+        if args.logger:
+            class_name = args.classes[i]
+            args.logger.info(f"{class_name}: Count = {count}, Weight = {weight}")
+
+    return weights
+
+def setup_loss(args: Args, train_labels=None):
+    weights = None
+    if args.use_label_weights and train_labels is not None:
+        args.logger.info("Calculating weights for classes.")
+        weights = _calculate_label_weights(args, train_labels)
+        weights = torch.tensor(weights, dtype=torch.float32).to(args.device)
+    if args.loss_name.lower() == "ce":
+        return torch.nn.CrossEntropyLoss(weight=weights)
+    else:
+        args.logger.warning(f"Unknown loss function: {args.loss_name}. Defaulting to ce (Cross Entropy).")
+        return torch.nn.CrossEntropyLoss(weight=weights)

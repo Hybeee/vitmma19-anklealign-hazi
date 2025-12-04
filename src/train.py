@@ -11,12 +11,7 @@ from data_pipeline.data_processing import get_loader
 import utils as utils
 from models import get_model, DummyBaseLine
 
-def setup_optimizer(args, model):
-    if args.optimizer == "adam":
-        return torch.optim.Adam(model.parameters(), lr=args.lr)
-
-def _evaluate_dummy(args: Args, model: DummyBaseLine, data_loader, split_name="train"):
-    f_loss = args.f_loss
+def _evaluate_dummy(args: Args, model: DummyBaseLine, data_loader, f_loss, split_name="train"):
     
     running_loss, running_accuracy = 0.0, 0.0
     total, correct = 0, 0
@@ -48,20 +43,19 @@ def _evaluate_dummy(args: Args, model: DummyBaseLine, data_loader, split_name="t
     running_loss, running_accuracy = 0.0, 0.0
     total, correct = 0, 0
 
-def train(args: Args, train_loader, val_loader, model, optimizer):
+def train(args: Args, train_loader, val_loader, model, optimizer, f_loss):
 
     if args.model_name.lower() == "dummy_baseline":
         args.logger.info("Evaluating Dummy Baseline on train and test sets")
-        _evaluate_dummy(args, model, train_loader, "train")
+        _evaluate_dummy(args, model, train_loader, f_loss, "train")
         args.logger.info("Note: Training accuracy might differ from accuracy on outputs/timestamp/plots/split_class_distribution.png." \
         " Reason: train_loader has drop_last=True.")
-        _evaluate_dummy(args, model, val_loader, "validation")
+        _evaluate_dummy(args, model, val_loader, f_loss, "validation")
         return
 
     logger = args.logger
 
     device = args.device
-    f_loss = args.f_loss
 
     min_loss = np.inf
     no_improvement = 0
@@ -181,7 +175,9 @@ def main():
 
     model = get_model(args, train_labels=train_labels)
 
-    optimizer = setup_optimizer(args=args, model=model)
+    optimizer = utils.setup_optimizer(args=args, model=model)
+
+    f_loss = utils.setup_loss(args=args, train_labels=train_labels)
 
     train_loader = get_loader(args, "train",
                               images=train_images, labels=train_labels)
@@ -190,7 +186,7 @@ def main():
 
     train(args=args,
           train_loader=train_loader, val_loader=val_loader,
-          model=model, optimizer=optimizer)
+          model=model, optimizer=optimizer, f_loss=f_loss)
     
 if __name__ == "__main__":
     main()

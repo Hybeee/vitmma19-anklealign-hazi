@@ -31,7 +31,7 @@ def save_result(args: Args, result, timestamp):
             "optimizer": args.optimizer,
             "epochs": args.epochs,
             "early_stopping": args.early_stopping,
-            "loss_fn": str(args.f_loss),
+            "loss_fn": str(args.loss_name),
             "device": str(args.device),
             "preprocessing_hyperparameters": 
             {
@@ -64,7 +64,7 @@ def save_result(args: Args, result, timestamp):
     utils.save_conf_mx_plot(args, result['conf_mx'], normalize=False)
     utils.save_conf_mx_plot(args, result['conf_mx'], normalize=True)
 
-def evaluate_model(args: Args, model, eval_loader):
+def evaluate_model(args: Args, model, eval_loader, f_loss):
     model.eval()
     model.to(args.device)
     # Loss
@@ -85,7 +85,7 @@ def evaluate_model(args: Args, model, eval_loader):
 
             outputs = model(images)
 
-            loss = args.f_loss(outputs, labels)
+            loss = f_loss(outputs, labels)
             running_loss += loss.item()
 
             _, pred_class = torch.max(outputs, dim=1)
@@ -136,9 +136,8 @@ def main():
 
     train_labels = None
 
-    if args.model_name.lower() == "dummy_baseline":
-        train_labels = np.load(os.path.join(args.data_dir, "splits", "train_labels.npy"))
-    
+    train_labels = np.load(os.path.join(args.data_dir, "splits", "train_labels.npy"))
+
     model = load_trained_model(args, train_labels=train_labels)
 
     test_images = np.load(os.path.join(args.data_dir, "splits", "test_images.npy"))
@@ -149,7 +148,9 @@ def main():
 
     args.logger.info(f"Running evaluation on model: {args.model_name}")
 
-    result = evaluate_model(args=args, model=model, eval_loader=test_loader)
+    f_loss = utils.setup_loss(args=args, train_labels=train_labels)
+
+    result = evaluate_model(args=args, model=model, eval_loader=test_loader, f_loss=f_loss)
 
     args.logger.info(f"Saving evaluation results and pipeline data to: {args.output_dir}\\results.json")
 
