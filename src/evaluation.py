@@ -1,7 +1,12 @@
 import numpy as np
 import torch
+from torchvision import transforms
 from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
+
+from pytorch_grad_cam import GradCAM
+from pytorch_grad_cam.utils.image import show_cam_on_image
+from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 
 from config import Args
 import utils
@@ -117,6 +122,72 @@ def evaluate_model(args: Args, model, eval_loader, f_loss):
 
     return result
 
+def run_gradcam_analysis(args: Args, model, images, labels, num_samples=5):
+    args.logger.info(f"Starting Grad-CAM analysis on {num_samples} random images...")
+
+    target_layers = []
+    if args.model_name.lower() == "anklealign_simple":
+        target_layers = [model.conv4]
+    elif args.model_name.lower() == "anklealign_complex":
+        target_layers = [model.layer4[-1]]
+    else:
+        args.logger.warning(f"Grad-CAM is not configured for model: {args.model_name}")
+        return
+    
+    preprocess_transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize((args.resolution, args.resolution)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=args.norm_mean, std=args.norm_std)
+    ])
+
+    if len(images) < num_samples:
+        num_samples = len(images)
+
+    indices = np.random.choice(len(images), num_samples, replace=False)
+
+    model.to(args.device)
+    model.eval()
+    cam = GradCAM(model=model, target_layers=target_layers)
+
+    save_path = os.path.join(args.output_dir, "plots", "gradcam")
+    os.makedirs(save_path, exist_ok=True)
+
+    for i, idx in enumerate(indices):
+        raw_image = images[idx]
+        true_label_idx = labels[idx]
+        true_label_name = args.classes[true_label_idx]
+
+        input_tensor = preprocess_transform(raw_image).unsqueeze(0).to(args.device)
+
+        outputs = model(input_tensor)
+        _, pred_idx = torch.max(outputs, 1)
+        pred_idx = pred_idx.item()
+        pred_label_name = args.classes[pred_idx]
+
+        targets = [ClassifierOutputTarget(pred_idx)]
+
+        grayscale_cam = cam(input_tensor=input_tensor, targets=targets)
+        grayscale_cam = grayscale_cam[0, :]
+
+        visualization = show_cam_on_image(raw_image, grayscale_cam, use_rgb=True)
+
+        plt.figure(figsize=(10, 5))
+
+        plt.subplot(1, 2, 1)
+        plt.imshow(raw_image)
+        plt.title(f"True: {true_label_name}")
+        plt.axis('off')
+
+        plt.subplot(1, 2, 2)
+        plt.imshow(visualization)
+        plt.title(f"Pred: {pred_label_name}\n(Grad-CAM)")
+        plt.axis('off')
+
+        plt.savefig(os.path.join(save_path, f"gradcam_{i}.png"), bbox_inches='tight')
+        plt.close()
+    
+    args.logger.info(f"Grad-CAM visualizations saved to: {save_path}")
 
 def main():
     parser = argparse.ArgumentParser()
@@ -155,6 +226,12 @@ def main():
     args.logger.info(f"Saving evaluation results and pipeline data to: {args.output_dir}\\results.json")
 
     save_result(args=args, result=result, timestamp=timestamp)
+
+    try:
+        run_gradcam_analysis(args=args, model=model,
+                             images=test_images, labels=test_labels)
+    except Exception as e:
+        args.logger.error(f"Failed to run Grad-CAM. Reason: {e}")
 
 if __name__ == "__main__":
     main()
