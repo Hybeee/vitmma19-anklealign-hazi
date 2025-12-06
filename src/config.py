@@ -1,19 +1,31 @@
 import torch
+
 import pprint
+import os
 
 MODEL_OPTIONS = {
     "baseline": "dummy_baseline",
     "simple": "anklealign_simple",
-    "complex": "anklealign_complex"
+    "complex": "anklealign_complex",
+    "vit": "anklealign_vit"
 }
+
+class ViTArgs:
+    def __init__(self):
+        self.vit_model = 'ViT-B_16'
+        self.frozen_weights = False
+
+        self.pretrained_weights_path = os.path.join("assets", "pretrained_weights", f"imagenet21k_{self.vit_model}.npz")
 
 class Args:
     def __init__(self):
         self.seed = 42
 
-        self.model_choice = "complex"
+        self.model_choice = "vit"
         self.model_name = MODEL_OPTIONS[self.model_choice]
         self.model_alias = self._get_name_alias()
+
+        self.vitargs = ViTArgs() if self.model_choice == "vit" else None
 
         self.classes = {
             0: 'Pronacio',
@@ -66,6 +78,8 @@ class Args:
             return "aa_s"
         elif self.model_name.lower() == "anklealign_complex":
             return "aa_c"
+        elif self.model_name.lower() == "anklealign_vit":
+            return "aa_vit"
         else:
             return "na"
         
@@ -74,6 +88,9 @@ class Args:
 
         config_to_log.pop('logger', None)
         config_to_log.pop('reverse_classes', None)
+
+        if 'vitargs' in config_to_log and config_to_log['vitargs'] is not None:
+            config_to_log['vitargs'] = vars(config_to_log['vitargs'])
 
         config_str = pprint.pformat(config_to_log, indent=4)
 

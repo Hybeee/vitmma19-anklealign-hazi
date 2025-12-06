@@ -7,6 +7,7 @@ import numpy as np
 import os
 
 from config import Args
+from vit_pytorch.models.modeling import VisionTransformer, CONFIGS 
 
 def get_model(args: Args, train_labels=None):
     args.logger.info(f"Initializing model: {args.model_name}")
@@ -21,6 +22,17 @@ def get_model(args: Args, train_labels=None):
         model = AnkleAlignSimple(args)
     elif args.model_name.lower() == "anklealign_complex":
         model = AnkleAlignComplex(args)
+    elif args.model_name.lower() == "anklealign_vit":
+        vitargs = args.vitargs
+        config = CONFIGS[vitargs.vit_model]
+        model = VisionTransformer(
+            config=config,
+            img_size=args.resolution,
+            num_classes=len(args.classes),
+            zero_head=True,
+            vis=True
+        )
+        model.load_from(np.load(vitargs.pretrained_weights_path))
     else:
         args.logger.error(f"Unknown model name specified in arguments: {args.model_name}")
         return None

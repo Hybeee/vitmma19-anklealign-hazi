@@ -205,11 +205,23 @@ def save_conf_mx_plot(args: Args, conf_mx, normalize=False):
     plt.close()
 
 def setup_optimizer(args: Args, model):
-    if args.optimizer.lower() == "adam":
-        return torch.optim.Adam(model.parameters(), lr=args.lr)
+    if args.model_name == "anklealign_vit" and args.vitargs.frozen_weights:
+        for param in model.parameters():
+            param.requires_grad = False
+
+        for param in model.head.parameters():
+            param.requires_grad = True
     else:
-        args.logger.warning(f"Unknown optimizer: {args.optimizer}. Defaulting to Adam...")
-        return torch.optim.Adam(model.parameters(), lr=args.lr)
+        for param in model.parameters():
+            param.requires_grad = True
+
+    trainable_params = [p for p in model.parameters() if p.requires_grad]
+
+    if args.optimizer.lower() == "adam":
+        return torch.optim.Adam(trainable_params, lr=args.lr)
+    else:
+        args.logger.warning(f"Unknown optimizer type: {args.optimizer}. Defaulting to Adam...")
+        return torch.optim.Adam(trainable_params, lr=args.lr)
 
 def _calculate_label_weights(args: Args, train_labels):
     num_classes = len(args.classes)

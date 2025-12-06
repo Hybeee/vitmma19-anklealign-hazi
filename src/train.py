@@ -81,6 +81,9 @@ def train(args: Args, train_loader, val_loader, model, optimizer, f_loss):
 
             outputs = model(images)
 
+            if isinstance(outputs, tuple):
+                outputs = outputs[0]
+
             loss = f_loss(outputs, labels)
             running_loss += loss.item()
 
@@ -113,6 +116,8 @@ def train(args: Args, train_loader, val_loader, model, optimizer, f_loss):
                 labels = labels.to(device)
 
                 outputs = model(images)
+                if isinstance(outputs, tuple):
+                    outputs = outputs[0]
 
                 loss = f_loss(outputs, labels) # f_loss will be torch.nn.CrossEntropy
                 running_loss += loss.item()

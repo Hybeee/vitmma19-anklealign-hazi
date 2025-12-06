@@ -90,6 +90,8 @@ def evaluate_model(args: Args, model, eval_loader, f_loss):
             labels = labels.to(args.device)
 
             outputs = model(images)
+            if isinstance(outputs, tuple):
+                outputs = outputs[0]
 
             loss = f_loss(outputs, labels)
             running_loss += loss.item()

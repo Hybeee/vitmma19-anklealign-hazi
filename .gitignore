@@ -209,3 +209,5 @@ __marimo__/
 # Project folders
 data/
 outputs/
+assets/
+src/vit_pytorch
