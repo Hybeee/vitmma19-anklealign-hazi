@@ -127,6 +127,8 @@ def main():
     images = np.load(os.path.join(args.data_dir, "cleaned_numpy_data", "images.npy"))
     labels = np.load(os.path.join(args.data_dir, "cleaned_numpy_data", "labels.npy"))
 
+
+    args.logger.info("Creating splits...")
     create_and_save_splits(args=args,
                            images=images,
                            labels=labels)

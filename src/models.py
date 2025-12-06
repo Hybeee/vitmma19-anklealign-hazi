@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
+from torchinfo import summary
 import numpy as np
 
 import os
@@ -15,14 +16,29 @@ def get_model(args: Args, train_labels=None):
             args.logger.error(f"No labels were given for: {args.model_name}")
             return None
         
-        return DummyBaseLine(train_labels=train_labels)
+        model = DummyBaseLine(train_labels=train_labels)
     elif args.model_name.lower() == "anklealign_simple":
-        return AnkleAlignSimple(args)
+        model = AnkleAlignSimple(args)
     elif args.model_name.lower() == "anklealign_complex":
-        return AnkleAlignComplex(args)
+        model = AnkleAlignComplex(args)
     else:
         args.logger.error(f"Unknown model name specified in arguments: {args.model_name}")
         return None
+    
+    if isinstance(model, torch.nn.Module):
+        input_size = (args.batch_size, 3, args.resolution, args.resolution)
+
+        model_summary = summary(
+            model=model,
+            input_size=input_size,
+            verbose=0
+        )
+
+        args.logger.info(f"Model Architecture Summary:\n\n{model_summary}")
+    else:
+        args.logger.info("Model is not a standard torch.nn.module. No information available of trainable parameters.")
+    
+    return model
 
 def load_trained_model(args: Args, train_labels=None):
     args.logger.info(f"Loading trained model: {args.model_name}")

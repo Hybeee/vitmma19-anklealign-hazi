@@ -1,6 +1,5 @@
 import torch
-import os
-import logging
+import pprint
 
 MODEL_OPTIONS = {
     "baseline": "dummy_baseline",
@@ -69,3 +68,17 @@ class Args:
             return "aa_c"
         else:
             return "na"
+        
+    def log_config(self):
+        config_to_log = vars(self).copy()
+
+        config_to_log.pop('logger', None)
+        config_to_log.pop('reverse_classes', None)
+
+        config_str = pprint.pformat(config_to_log, indent=4)
+
+        self.logger.info("=" * 60)
+        self.logger.info("          CONFIGURATION")
+        self.logger.info("=" * 60)
+        self.logger.info(f"\n{config_str}")
+        self.logger.info("=" * 60)

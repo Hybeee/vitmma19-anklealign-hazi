@@ -43,10 +43,14 @@ def main():
     log_dir = args.output_dir
     args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
 
+    args.log_config()
+
     numpy_all_dir = os.path.join(args.data_dir, "numpy_all_data")
     os.makedirs(numpy_all_dir, exist_ok=True)
 
     root = os.path.join("data", "all_data")
+
+    args.logger.info(f"Preparing data for pipeline from: {root}.")
 
     class_counts = {
         0: 0,
@@ -124,10 +128,11 @@ def main():
     np.save(os.path.join(numpy_all_dir, "labels_all.npy"), Y)
 
     args.logger.info("Data Preparation Summary")
-    args.logger.info(f"Total data count: {data_count}")
-    args.logger.info(f"Total processed and saved images: {len(X)}")
-    args.logger.info(f"Image array shape: {X.shape}")
-    args.logger.info(f"Label array shape: {Y.shape}")
+    args.logger.info(f"\tTotal data count: {data_count}")
+    args.logger.info(f"\tTotal processed and saved images: {len(X)}")
+    args.logger.info(f"\tImage array shape: {X.shape}")
+    args.logger.info(f"\tLabel array shape: {Y.shape}")
+    args.logger.info(f"Prepared data saved to: {numpy_all_dir}")
 
     utils.plot_label_distribution(args, class_counts, output_plots_dir)
     utils.plot_aspect_ratio(aspect_ratios, output_plots_dir)

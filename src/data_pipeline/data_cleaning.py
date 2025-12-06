@@ -137,12 +137,17 @@ def main():
     log_dir = args.output_dir
     args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
 
+    args.logger.info("Cleaning data...")
+
     numpy_all_dir = os.path.join(args.data_dir, "numpy_all_data")
     
     images = np.load(os.path.join(numpy_all_dir, "images_all.npy"))
     labels = np.load(os.path.join(numpy_all_dir, "labels_all.npy"))
 
+    args.logger.info("Excluding duplicates")
     images, labels = exclude_duplicates(args, images, labels, output_plots_dir)
+    
+    args.logger.info("Excluding low quality images")
     images, labels = exclude_low_quality_images(args, images, labels, output_plots_dir)
 
     cleaned_np_dir = os.path.join(args.data_dir, "cleaned_numpy_data")
@@ -154,6 +159,7 @@ def main():
 
     np.save(os.path.join(cleaned_np_dir, "images.npy"), images)
     np.save(os.path.join(cleaned_np_dir, "labels.npy"), labels)
+    args.logger.info(f"Prepared data saved to: {cleaned_np_dir}")
 
 if __name__ == "__main__":
     main()

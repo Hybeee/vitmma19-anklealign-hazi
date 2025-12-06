@@ -16,6 +16,7 @@ from data_pipeline.data_processing import get_loader
 import os
 import argparse
 import json
+import pprint
 
 def save_result(args: Args, result, timestamp):
     results = \
@@ -119,6 +120,12 @@ def evaluate_model(args: Args, model, eval_loader, f_loss):
         "conf_mx": conf_mx,
         "classification_report": report
     }
+
+    args.logger.info("Evaluation results")
+    args.logger.info(f"Average loss: {avg_loss:.4f}")
+    args.logger.info(f"Accuracy: {accuracy:.4f}")
+    args.logger.info(f"Confusion matrix:\n{pprint.pformat(conf_mx)}")
+    args.logger.info(f"Classification report (per-class metrics):\n{pprint.pformat(report, indent=4)}")
 
     return result
 
