@@ -3,6 +3,7 @@ import torch
 from torchvision import transforms
 from sklearn.metrics import confusion_matrix, classification_report
 import matplotlib.pyplot as plt
+import cv2
 
 from pytorch_grad_cam import GradCAM
 from pytorch_grad_cam.utils.image import show_cam_on_image
@@ -169,8 +170,8 @@ def run_gradcam_analysis(args: Args, model, images, labels, num_samples=5):
 
         input_tensor = preprocess_transform(raw_image).unsqueeze(0).to(args.device)
 
-        outputs = model(input_tensor)
-        _, pred_idx = torch.max(outputs, 1)
+        output = model(input_tensor)
+        _, pred_idx = torch.max(output, 1)
         pred_idx = pred_idx.item()
         pred_label_name = args.classes[pred_idx]
 
@@ -197,6 +198,79 @@ def run_gradcam_analysis(args: Args, model, images, labels, num_samples=5):
         plt.close()
     
     args.logger.info(f"Grad-CAM visualizations saved to: {save_path}")
+
+def create_attention_maps(args: Args, model, images, labels, num_samples=5):
+    args.logger.info(f"Visualizing attention maps.")
+
+    preprocess_transform = transforms.Compose([
+        transforms.ToPILImage(),
+        transforms.Resize((args.resolution, args.resolution)),
+        transforms.ToTensor(),
+        transforms.Normalize(mean=args.norm_mean, std=args.norm_std)
+    ])
+
+    if len(images) < num_samples:
+        num_samples = len(images)
+
+    indicies = np.random.choice(len(images), num_samples, replace=False)
+
+    model.to(args.device)
+    model.eval()
+
+    save_path = os.path.join(args.output_dir, "plots", "attention_maps")
+    os.makedirs(save_path, exist_ok=True)
+
+    for i, idx in enumerate(indicies):
+        raw_image = images[idx]
+        true_label_idx = labels[idx]
+        true_label_name = args.classes[true_label_idx]
+
+        input_tensor = preprocess_transform(raw_image).unsqueeze(0).to(args.device)
+
+        (output, att_mat) = model(input_tensor)
+
+        _, pred_idx = torch.max(output, 1)
+        pred_idx = pred_idx.item()
+        pred_label_name = args.classes[pred_idx]
+
+        att_mat = torch.stack(att_mat).squeeze(1)
+        att_mat = torch.mean(att_mat, dim=1)
+
+        residual_att = torch.eye(att_mat.size(1)).to(args.device)
+        aug_att_mat = att_mat + residual_att
+        aug_att_mat = aug_att_mat / aug_att_mat.sum(dim=-1).unsqueeze(-1)
+
+        joint_attentions = torch.zeros(aug_att_mat.size(), device=args.device)
+        joint_attentions[0] = aug_att_mat[0]
+
+        for n in range(1, aug_att_mat.size(0)):
+            joint_attentions[n] = torch.matmul(aug_att_mat[n], joint_attentions[n-1])
+        
+        v = joint_attentions[-1]
+        grid_size = int(np.sqrt(aug_att_mat.size(-1)))
+        mask = v[0, 1:].reshape(grid_size, grid_size).detach().cpu().numpy()
+        mask = cv2.resize(mask / mask.max(), (raw_image.shape[1], raw_image.shape[0]))
+
+        raw_image = (raw_image * 255).astype(np.uint8)
+
+        plt.figure(figsize=(10, 5))
+
+        plt.subplot(1, 2, 1)
+        plt.imshow(raw_image)
+        plt.title(f"True: {true_label_name}")
+        plt.axis('off')
+
+        plt.subplot(1, 2, 2)
+        plt.imshow(raw_image)
+        plt.imshow(mask, cmap='jet', alpha=0.5)
+        plt.title(f"Pred: {pred_label_name}\n(Attention Map)")
+        plt.axis('off')
+
+        plt.savefig(os.path.join(save_path, f"attention_map_{i}.png"), bbox_inches='tight')
+        plt.close()
+
+    args.logger.info(f"Attention Map visualization saved to: {save_path}")
+
 
 def main():
     parser = argparse.ArgumentParser()
@@ -237,10 +311,14 @@ def main():
     save_result(args=args, result=result, timestamp=timestamp)
 
     try:
-        run_gradcam_analysis(args=args, model=model,
-                             images=test_images, labels=test_labels)
+        if args.model_name == "anklealign_vit":
+            create_attention_maps(args=args, model=model,
+                                  images=test_images, labels=test_labels)
+        else:
+            run_gradcam_analysis(args=args, model=model,
+                                 images=test_images, labels=test_labels)
     except Exception as e:
-        args.logger.error(f"Failed to run Grad-CAM. Reason: {e}")
+        args.logger.error(f"Failed to run model explainability visualization for {args.model_name}. Reason: {e}")
 
 if __name__ == "__main__":
     main()
