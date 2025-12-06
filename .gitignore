@@ -210,4 +210,4 @@ __marimo__/
 data/
 outputs/
 assets/
-src/vit_pytorch
+# src/vit_pytorch
