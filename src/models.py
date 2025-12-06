@@ -61,7 +61,7 @@ def load_trained_model(args: Args, train_labels=None):
             return None
         return DummyBaseLine(train_labels=train_labels)
     else:
-        model = torch.load(os.path.join("outputs", "20251206_022019_aa_vit", "model.pth"))
+        model = torch.load(os.path.join(args.output_dir, "model.pth"))
         return model
 
 class DummyBaseLine(nn.Module):
