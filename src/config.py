@@ -58,7 +58,7 @@ class Args:
         self.epochs = 100
         self.batch_size = 16
         self.lr = 1e-5
-        self.early_stopping = 10
+        self.early_stopping = 5
 
         self.device = "cuda" if torch.cuda.is_available() else "cpu"
 

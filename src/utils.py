@@ -34,6 +34,9 @@ def save_plots(args: Args, train_loss, train_accuracy, val_loss, val_accuracy):
 def get_logger(timestamp: str, log_dir: str="logs"):
     os.makedirs(log_dir, exist_ok=True)
 
+    general_log_dir = "logs"
+    os.makedirs(general_log_dir, exist_ok=True)
+
     logger = logging.getLogger(timestamp)
     logger.setLevel(logging.INFO)
 
@@ -48,6 +51,11 @@ def get_logger(timestamp: str, log_dir: str="logs"):
         fh.setLevel(logging.INFO)
         fh.setFormatter(formatter)
         logger.addHandler(fh)
+
+        general_fh = logging.FileHandler(os.path.join(general_log_dir, f"run.log"), encoding='utf-8')
+        general_fh.setLevel(logging.INFO)
+        general_fh.setFormatter(formatter)
+        logger.addHandler(general_fh)
 
     return logger
 
