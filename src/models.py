@@ -66,6 +66,10 @@ def load_trained_model(args: Args, train_labels=None):
         model = torch.load(os.path.join(args.output_dir, "model.pth"))
         return model
 
+def load_trained_model_from_path(model_path):
+    model = torch.load(model_path)
+    return model
+
 class DummyBaseLine(nn.Module):
     def __init__(self, train_labels):
         super(DummyBaseLine, self).__init__()

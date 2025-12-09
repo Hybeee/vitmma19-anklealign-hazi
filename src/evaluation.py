@@ -11,7 +11,7 @@ from pytorch_grad_cam.utils.model_targets import ClassifierOutputTarget
 
 from config import Args
 import utils
-from models import get_model, load_trained_model
+from models import load_trained_model
 from data_pipeline.data_processing import get_loader
 
 import os
