@@ -138,6 +138,8 @@ def run_gradcam_analysis(args: Args, model, images, labels, num_samples=5):
     target_layers = []
     if args.model_name.lower() == "anklealign_simple":
         target_layers = [model.conv4]
+    elif args.model_name.lower() == "anklealign_medium":
+        target_layers = [model.block4[0]]
     elif args.model_name.lower() == "anklealign_complex":
         target_layers = [model.layer4[-1]]
     else:

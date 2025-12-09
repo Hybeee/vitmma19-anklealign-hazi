@@ -52,7 +52,7 @@ def get_logger(timestamp: str, log_dir: str="logs"):
         fh.setFormatter(formatter)
         logger.addHandler(fh)
 
-        general_fh = logging.FileHandler(os.path.join(general_log_dir, f"run.log"), encoding='utf-8')
+        general_fh = logging.FileHandler(os.path.join(general_log_dir, f"run.log"), encoding='utf-8', mode='w')
         general_fh.setLevel(logging.INFO)
         general_fh.setFormatter(formatter)
         logger.addHandler(general_fh)

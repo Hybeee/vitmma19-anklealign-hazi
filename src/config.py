@@ -6,6 +6,7 @@ import os
 MODEL_OPTIONS = {
     "baseline": "dummy_baseline",
     "simple": "anklealign_simple",
+    "medium": "anklealign_medium",
     "complex": "anklealign_complex",
     "vit": "anklealign_vit"
 }
@@ -76,6 +77,8 @@ class Args:
             return "ds"
         elif self.model_name.lower() == "anklealign_simple":
             return "aa_s"
+        elif self.model_name.lower() == "anklealign_medium":
+            return "aa_m"
         elif self.model_name.lower() == "anklealign_complex":
             return "aa_c"
         elif self.model_name.lower() == "anklealign_vit":
