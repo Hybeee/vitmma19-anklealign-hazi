@@ -40,6 +40,8 @@ class Args:
             'Szupinacio': 2
         }
 
+        self.use_padding = True
+
         self.similarity_threshold = 1e-4
         self.save_dupes = True
         self.sharpness_threshold = 40

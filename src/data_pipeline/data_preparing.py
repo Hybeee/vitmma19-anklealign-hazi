@@ -27,6 +27,24 @@ wrong_labels = {
     'supination': 2
 }
 
+def _resize_with_padding(args: Args, image):
+    res = args.resolution
+
+    h, w = image.shape[:2]
+    scale = min(res / h, res / w)
+    new_w, new_h = int(w * scale), int(h * scale)
+
+    resized_image = cv2.resize(image, (new_w, new_h), interpolation=cv2.INTER_LINEAR)
+
+    canvas = np.zeros((res, res, 3), dtype=np.uint8)
+
+    x_offset = (res - new_w) // 2
+    y_offset = (res - new_h) // 2
+
+    canvas[y_offset:y_offset+new_h, x_offset:x_offset+new_w] = resized_image
+
+    return canvas
+
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--timestamp", type=str, required=True)
@@ -101,7 +119,11 @@ def main():
 
                     image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
                     aspect_ratio = image.shape[0]/image.shape[1]
-                    image = cv2.resize(image, (args.resolution, args.resolution))
+
+                    if args.use_padding:
+                        image = _resize_with_padding(args, image)
+                    else:
+                        image = cv2.resize(image, (args.resolution, args.resolution))
                     image = np.array(image, dtype=np.float32)
                     image /= 255.0
 
