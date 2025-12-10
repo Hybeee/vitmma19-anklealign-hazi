@@ -6,8 +6,6 @@ timestamp=$(date +%Y%m%d_%H%M%S)
 mkdir -p data
 mkdir -p outputs
 
-python main.py
-
 echo "Running data preparation..."
 python data_pipeline/data_preparing.py --timestamp $timestamp
 
