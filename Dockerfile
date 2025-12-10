@@ -20,7 +20,7 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 COPY ./src .
 
 # 6. A futtató script végrehajthatóvá tétele
-RUN chmod +x run.sh
+RUN chmod +x .
 
 # 7. Alapértelmezett parancs a konténer indításakor
 CMD ["bash", "run.sh"]

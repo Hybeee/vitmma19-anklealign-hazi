@@ -5,6 +5,7 @@ from torchinfo import summary
 import numpy as np
 
 import os
+import urllib.request
 
 from config import Args
 from vit_pytorch.models.modeling import VisionTransformer, CONFIGS 
@@ -34,6 +35,20 @@ def get_model(args: Args, train_labels=None):
             zero_head=True,
             vis=True
         )
+        if not os.path.exists(vitargs.pretrained_weights_path):
+            args.logger.info(f"Weights not found at: {vitargs.pretrained_weights_path}")
+
+            os.makedirs(os.path.dirname(vitargs.pretrained_weights_path), exist_ok=True)
+
+            try:
+                args.logger.info(f"Downloading weights from: {vitargs.download_url}")
+                urllib.request.urlretrieve(vitargs.download_url, vitargs.pretrained_weights_path)
+                args.logger.info("Download completed successfully.")
+            except Exception as e:
+                args.logger.error(f"Failed to download weights: {e}")
+                return None
+        else:
+            args.logger.info(f"Weights found at: {vitargs.pretrained_weights_path}")
         model.load_from(np.load(vitargs.pretrained_weights_path))
     else:
         args.logger.error(f"Unknown model name specified in arguments: {args.model_name}")

@@ -16,6 +16,7 @@ class ViTArgs:
         self.vit_model = 'ViT-B_16'
         self.frozen_weights = False
 
+        self.download_url = f"https://storage.googleapis.com/vit_models/imagenet21k/{self.vit_model}.npz"
         self.pretrained_weights_path = os.path.join("assets", "pretrained_weights", f"imagenet21k_{self.vit_model}.npz")
 
 class Args:
