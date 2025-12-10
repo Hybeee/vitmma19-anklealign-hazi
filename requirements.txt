@@ -3,3 +3,10 @@ torchvision==0.18.0
 numpy==1.26.4
 matplotlib==3.10.1
 pillow==11.0.0
+opencv-python==4.11.0.86
+scikit-learn==1.6.1
+fastapi==0.121.0
+uvicorn==0.38.0
+grad-cam==1.5.5
+torchinfo==1.8.0
+streamlit==1.52.1

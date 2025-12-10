@@ -3,7 +3,6 @@ import numpy as np
 import cv2
 
 import requests
-import io
 
 API_URL = "http://127.0.0.1:8000/predict"
 
