@@ -1,67 +1,5 @@
 # vitmma19-anklealign-hazi
 
-## Submission Instructions
-
-[Delete this entire section after reading and following the instructions.]
-
-### Project Levels
-
-**Basic Level (for signature)**
-*   Containerization
-*   Data acquisition and analysis
-*   Data preparation
-*   Baseline (reference) model
-*   Model development
-*   Basic evaluation
-
-**Outstanding Level (aiming for +1 mark)**
-*   Containerization
-*   Data acquisition and analysis
-*   Data cleansing and preparation
-*   Defining evaluation criteria
-*   Baseline (reference) model
-*   Incremental model development
-*   Advanced evaluation
-*   ML as a service (backend) with GUI frontend
-*   Creative ideas, well-developed solutions, and exceptional performance can also earn an extra grade (+1 mark).
-
-### Logging Requirements
-
-The training process must produce a log file that captures the following essential information for grading:
-
-1.  **Configuration**: Print the hyperparameters used (e.g., number of epochs, batch size, learning rate).
-2.  **Data Processing**: Confirm successful data loading and preprocessing steps.
-3.  **Model Architecture**: A summary of the model structure with the number of parameters (trainable and non-trainable).
-4.  **Training Progress**: Log the loss and accuracy (or other relevant metrics) for each epoch.
-5.  **Validation**: Log validation metrics at the end of each epoch or at specified intervals.
-6.  **Final Evaluation**: Result of the evaluation on the test set (e.g., final accuracy, MAE, F1-score, confusion matrix).
-
-The log file must be uploaded to `log/run.log` to the repository. The logs must be easy to understand and self explanatory. 
-Ensure that `src/utils.py` is used to configure the logger so that output is directed to stdout (which Docker captures).
-
-### Submission Checklist
-
-Before submitting your project, ensure you have completed the following steps.
-**Please note that the submission can only be accepted if these minimum requirements are met.**
-
-- [ ] **Project Information**: Filled out the "Project Information" section (Topic, Name, Extra Credit).
-- [ ] **Solution Description**: Provided a clear description of your solution, model, and methodology.
-- [ ] **Extra Credit**: If aiming for +1 mark, filled out the justification section.
-- [ ] **Data Preparation**: Included a script or precise description for data preparation.
-- [ ] **Dependencies**: Updated `requirements.txt` with all necessary packages and specific versions.
-- [ ] **Configuration**: Used `src/config.py` for hyperparameters and paths, contains at least the number of epochs configuration variable.
-- [ ] **Logging**:
-    - [ ] Log uploaded to `log/run.log`
-    - [ ] Log contains: Hyperparameters, Data preparation and loading confirmation, Model architecture, Training metrics (loss/acc per epoch), Validation metrics, Final evaluation results, Inference results.
-- [ ] **Docker**:
-    - [ ] `Dockerfile` is adapted to your project needs.
-    - [ ] Image builds successfully (`docker build -t dl-project .`).
-    - [ ] Container runs successfully with data mounted (`docker run ...`).
-    - [ ] The container executes the full pipeline (preprocessing, training, evaluation).
-- [ ] **Cleanup**:
-    - [ ] Removed unused files.
-    - [ ] **Deleted this "Submission Instructions" section from the README.**
-
 ## Project Details
 
 ### Project Information
@@ -140,6 +78,8 @@ The repository is structured as follows:
         - Attribution: Reimplementation of the original paper _An Image is Worth 16x16 Words (Dosovitskiy et al.)_
     - `api.py`: Implementation of the backend of the MLaaS.
     - `config.py`: Contains an args class that's responsible for storing the arguments that are used by the entire pipeline such as data preparation parameters (e.g.: _similarity threshold_) or training hyperparameters (e.g.: _epochs_)
+    - `evaluation.py`: Script for evaluating the trained model on test dta and generating metrics.
+    - `inference.py`: Scrip that runs the model on new, unseen data to generate predictions.
     - `models.py`: Responsible for instantiating the correct models - training stage - as well as loading the pre-trained weights for the models - evaluation stage. The script also contains the model definitions for the following models:
         - Dummy Baseline
         - Simple model

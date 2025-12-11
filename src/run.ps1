@@ -20,4 +20,7 @@ python src/train.py --timestamp $timestamp
 Write-Host "Running evaluation..."
 python src/evaluation.py --timestamp $timestamp
 
+Write-Host "Running inference..."
+python src/inference.py --timestamp $timestamp
+
 Write-Host "Pipeline finished successfully."

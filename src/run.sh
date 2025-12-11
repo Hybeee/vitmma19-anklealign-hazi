@@ -21,4 +21,7 @@ python train.py --timestamp $timestamp
 echo "Running evaluation..."
 python evaluation.py --timestamp $timestamp
 
+echo "Running inference..."
+python inference.py --timestamp $timestamp
+
 echo "Pipeline finished successfully."

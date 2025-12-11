@@ -1,38 +1,8 @@
-[2025-12-11 00:20:03,763] [INFO] - Loading trained model: anklealign_vit
-[2025-12-11 00:20:04,233] [INFO] - Running evaluation on model: anklealign_vit
-[2025-12-11 00:20:04,233] [INFO] - Calculating weights for classes.
-[2025-12-11 00:20:04,238] [INFO] - Pronacio: Count = 97, Weight = 0.8350515463917526
-[2025-12-11 00:20:04,239] [INFO] - Neutralis: Count = 108, Weight = 0.75
-[2025-12-11 00:20:04,239] [INFO] - Szupinacio: Count = 38, Weight = 2.1315789473684212
-[2025-12-11 00:20:05,485] [INFO] - Evaluation results
-[2025-12-11 00:20:05,485] [INFO] - Average loss: 0.9875
-[2025-12-11 00:20:05,486] [INFO] - Accuracy: 0.5806
-[2025-12-11 00:20:05,487] [INFO] - Confusion matrix:
-array([[ 8,  2,  2],
-       [ 4, 10,  0],
-       [ 2,  3,  0]], dtype=int64)
-[2025-12-11 00:20:05,489] [INFO] - Classification report (per-class metrics):
-{   'Neutralis': {   'f1-score': 0.6896551724137931,
-                     'precision': 0.6666666666666666,
-                     'recall': 0.7142857142857143,
-                     'support': 14.0},
-    'Pronacio': {   'f1-score': 0.6153846153846154,
-                    'precision': 0.5714285714285714,
-                    'recall': 0.6666666666666666,
-                    'support': 12.0},
-    'Szupinacio': {   'f1-score': 0.0,
-                      'precision': 0.0,
-                      'recall': 0.0,
-                      'support': 5.0},
-    'accuracy': 0.5806451612903226,
-    'macro avg': {   'f1-score': 0.43501326259946954,
-                     'precision': 0.41269841269841273,
-                     'recall': 0.4603174603174603,
-                     'support': 31.0},
-    'weighted avg': {   'f1-score': 0.5496705741422093,
-                        'precision': 0.522273425499232,
-                        'recall': 0.5806451612903226,
-                        'support': 31.0}}
-[2025-12-11 00:20:05,491] [INFO] - Saving evaluation results and pipeline data to: outputs\20251211_001045_aa_vit\results.json
-[2025-12-11 00:20:06,578] [INFO] - Visualizing attention maps.
-[2025-12-11 00:20:09,860] [INFO] - Attention Map visualization saved to: outputs\20251211_001045_aa_vit\plots\attention_maps
+[2025-12-11 00:58:27,908] [INFO] - Loading trained model: anklealign_vit
+[2025-12-11 00:58:28,198] [INFO] - Running inference on 5 images...
+[2025-12-11 00:58:28,494] [INFO] - Result {i}: PREDICTED_CLASS - TRUE CLASS | CONFIDENCE | STATUS
+[2025-12-11 00:58:29,046] [INFO] - Result 1: Pronacio - Pronacio | 58.45 | PASS
+[2025-12-11 00:58:29,099] [INFO] - Result 2: Neutralis - Neutralis | 63.55 | PASS
+[2025-12-11 00:58:29,148] [INFO] - Result 3: Pronacio - Pronacio | 53.72 | PASS
+[2025-12-11 00:58:29,208] [INFO] - Result 4: Pronacio - Szupinacio | 48.81 | FAIL
+[2025-12-11 00:58:29,261] [INFO] - Result 5: Pronacio - Pronacio | 58.46 | PASS
