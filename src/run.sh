@@ -27,7 +27,7 @@ python inference.py --timestamp $timestamp
 if [[ "$1" == "--serve" ]]; then
     echo "Pipeline finished successfully. Starting MLaaS (API + UI) demo..."
 
-    uvicorn api:app --host 127.0.0.1 --port 8000 &
+    uvicorn api:app --host 0.0.0.0 --port 8000 &
 
     API_PID=$!
 
@@ -35,7 +35,7 @@ if [[ "$1" == "--serve" ]]; then
 
     sleep 5
 
-    streamlit run ui.py --server.address 127.0.0.1 --server.port 8501 --server.headless true
+    streamlit run ui.py --server.address 0.0.0.0 --server.port 8501 --server.headless true
 
     kill $API_PID
 else
