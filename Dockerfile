@@ -20,7 +20,7 @@ RUN pip install --upgrade pip && pip install --no-cache-dir -r requirements.txt
 COPY ./src .
 
 # 6. A futtató script végrehajthatóvá tétele
-RUN chmod +x .
+RUN chmod +x run.sh
 
 # 7. Portok
 EXPOSE 8000

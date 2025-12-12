@@ -7,7 +7,7 @@ mkdir -p data
 mkdir -p outputs
 
 echo "Running data preparation..."
-python data_pipeline/data_preparing.py --timestamp $timestamp --logs_dir_write true
+python data_pipeline/data_preparing.py --timestamp $timestamp --overwrite_logs
 
 echo "Running data cleaning..."
 python data_pipeline/data_cleaning.py --timestamp $timestamp

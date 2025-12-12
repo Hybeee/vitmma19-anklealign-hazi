@@ -14,7 +14,7 @@ The current solution solves a computer vision problem, where the goal is to corr
 
 The implementation includes 5 stages; the first is data preparation which is implemented in `src/data_pipeline/data_preparing.py`. This consists of reading the raw images from the input `data/all_data` folder. This is followed by a data cleaning step - implemented in `src/data_pipeline/data_cleaning.py` -, which removes duplicates and images that do not meet a given quality criteria. The data is then finally split into train, validation and test datasets in the third stage implemented in `src/data_pipeline/data_processing.py`. The fourth stage is training, which includes early stopping to prevent overfitting. The fifth and final stage is evaluation. This includes multiple steps, such as calculating classification metrics, confusion matrices as well as plots that display a model's focus on the input image - the latter is done by using Grad-CAM or Attention Rollout based on the model type. The implementations can be found in `src/train.py` and `src/evaluation.py` respectively. 
 
-I've implemented 4 models for the task; a dummy baseline which predicts majority class - calculated from the train dataset -, as well as a simple, medium and complex model. I have also evaluated the performance of a Vision Transformer. Note that the solution uses the ViT model for the pipeline by default. During evaluation the Vision Transformer outperformed all other models.
+I've implemented 4 models for the task; a dummy baseline which predicts majority class - calculated from the train dataset -, as well as a simple, medium and complex model. I have also evaluated the performance of a Vision Transformer. Note that the solution uses the ViT model for the pipeline by default. In this case the model's weights are downloaded from: [https://storage.googleapis.com/vit_models/imagenet21k/{vit_model}.npz](https://storage.googleapis.com/vit_models/imagenet21k/ViT-B_16.npz) - where `vit_model=args.vitargs.vit_model`. During evaluation the Vision Transformer outperformed all other models.
 
 The solution also includes a simple MLaaS - the implementations can be found in `api.py` and `ui.py`.
 
@@ -22,6 +22,8 @@ The solution also includes a simple MLaaS - the implementations can be found in 
 
 The following aspects deserve an extra mark, in my opinion:
 - Implemented automated data cleaning
+    - Excluding duplicate images
+    - Excluding images that are of low quality
 - Implemented and evaluated several architectures of different complexities
 - Used advanced AI explainability - Grad-CAM/Attention Rollout - to further analyze model behaviour
 
@@ -47,22 +49,38 @@ Run the following command in the root directory of the repository to build the D
 docker build -t your-project-name:version .
 ```
 
-#### Run
+The following sessions shows you how to run the solution. The first _Run_ section gives instructions on how to run the standard pipeline, whilst the second gives instructions on how to run the pipeline with the MLaaS demo. For more information about the MLaaS demo please refer to [ML as a Service (MLaaS)](#ml-as-a-service-mlaas).
 
-To run the solution, use the following command. You must mount your local data directory to `/app/data` inside the container.
+#### Run (Standard Pipeline Only) 
 
-To run the solution, use the following command. You must mount your local data and outputs directory to `/app/data` and `/app/outputs` inside the container.
-
-**To capture the logs for submission (required), redirect the output to a file:**
+To run the (pipeline only) solution, follow the instructions below. You must mount your local data and outputs directory to `/app/data` and `/app/outputs` inside the container.
 
 ```bash
-docker run --rm --gpus all ` -v /absolute/path/to/your/local/data:/app/data ` ` -v /absolute/path/to/your/local/outputs:/app/outputs ` your-project-name:version > training_log.txt 2>&1
+docker run --rm --gpus all ` -v /absolute/path/to/your/local/data:/app/data ` ` -v /absolute/path/to/your/local/outputs:/app/outputs ` your-project-name:version bash run.sh > logs/run.log 2>&1
 ```
 
-*   Replace `/absolute/path/to/your/local/data` with the actual path to your dataset on your host machine that meets the [Data preparation requirements](#data-preparation).
-*   The `> log/run.log 2>&1` part ensures that all output (standard output and errors) is saved to `log/run.log`.
-*   The container is configured to run every step (data preprocessing, training, evaluation, inference).
+- Replace `/absolute/path/to/your/local/data` with the actual path to your data folder that [data preparation](#data-preparation) uses.
+- Replace `/absolute/path/to/your/local/outputs` with the actual path to your outputs folder on your host machine. This is where you'll see the outputs of the pipeline.
+- The `> logs/run.log 2>&1` part ensures that all output (standard output and errors) is saved to `logs/run.log`.
+- The container is configured to run every step (data preprocessing, training, evaluation, inference).
 
+#### Run (MLaaS Demo: Pipeline + UI)
+
+To run the (MLaaS demo) solution, follow the instructions below. You must mount your local data and outputs directory to `/app/data` and `/app/outputs` inside the container.
+
+```bash
+docker run --rm --gpus all -p your_backend_port:8000 -p your_frontend_port:8501 ` -v /absolute/path/to/your/local/data:/app/data ` ` -v /absolute/path/to/your/local/outputs:/app/outputs ` your-project-name:version > logs/run.log 2>&1
+```
+
+- Replace `your_backend_port` and `your_frontend_port` with your desired ports.
+    - `-p your_backend_port:8000`: Maps the Backend API
+    - `-p your_frontend_port:8501`: Maps the Streamlit UI. Access it at [http://localhost:8501](http://localhost:8501) if `your_frontend_port = 8501`
+- Replace `/absolute/path/to/your/local/data` with the actual path to your data folder that [data preparation](#data-preparation) uses.
+- Replace `/absolute/path/to/your/local/outputs` with the actual path to your outputs folder on your host machine. This is where you'll see the outputs of the pipeline.
+- The `> logs/run.log 2>&1` part ensures that all output (standard output and errors) is saved to `logs/run.log`.
+- The container is configured to run every step (data preprocessing, training, evaluation, inference and MLaaS demo).
+
+Please note that during local testing `Ctrl + C` did not stop the container from running - the frontend and backend kept running. In this case you may want to manually stop the container via Docker Desktop or by running `docker rm -f {your_container's_id}`. The ID can be found by running `docker ps`.
 
 ### File Structure and Functions
 
@@ -90,7 +108,7 @@ The repository is structured as follows:
     - `ui.py`: Implementation of the frontend of the MLaaS
     - `utils.py`: Helper functions and utilities used across different scripts. Used for operations such as setting up the optimizer, setting up the logger or plotting data.
 
-- **`log/`**: Contains log files.
+- **`logs/`**: Contains log files.
     - `run.log`: Example log file showing the output of a successful training run. Always contains the log of the latest run.
 
 - **Root Directory**:
