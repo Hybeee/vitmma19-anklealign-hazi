@@ -99,3 +99,25 @@ The repository is structured as follows:
     - `requirements.txt`: List of Python dependencies required for the project.
     - `README.md`: Project documentation and instructions.
     - `training_log.txt`: Example output after running the container.
+
+### ML as a Service (MLaaS)
+The project also includes a simple MLaaS demo which consists of two components:
+- Frontend: For the implementation of the frontend/UI the streamlit library was used. Details can be seen in `src/ui.py`
+- Backend: For the implementation of the backend fastapi and uvicorn was used. Details can be seen in `src/api.py`
+
+The backend exposes an endpoint called `/predict`. The endpoint expects the raw image data sent in the post request. The frontend reaches the aforementioned endpoint over the network - current implementations uses localhost for this purpose.
+
+The demo can be started by following the steps listed below:
+- Open two terminals
+- Navigate to the project root in both terminals
+- Enter the following commands:
+    - frontend: `streamlit run src/ui.py`
+    - backend: `python src/api.py`
+- Streamlit should automatically open the website on localhost
+- Upload an image from your file browser
+    - The uploaded image should appear on the UI
+- Click `Classify Image`
+- View results
+    - Predicted class and its confidence, as well as per-class confidence can be viewed on the output.
+
+Note: The backend automatically loads a pre-trained from `outputs/latest_folder_by_time` - where `latest_folder_by_time` is the output folder of the latest run. Thus you need to run the pipeline first or acquire appropriate model weights for one of the models used in this project to run the demo.

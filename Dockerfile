@@ -22,5 +22,9 @@ COPY ./src .
 # 6. A futtató script végrehajthatóvá tétele
 RUN chmod +x .
 
-# 7. Alapértelmezett parancs a konténer indításakor
-CMD ["bash", "run.sh"]
+# 7. Portok
+EXPOSE 8000
+EXPOSE 8501
+
+# 8. Alapértelmezett parancs a konténer indításakor
+CMD ["bash", "run.sh", "--serve"]

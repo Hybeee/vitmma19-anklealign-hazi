@@ -11,3 +11,4 @@ grad-cam==1.5.5
 torchinfo==1.8.0
 streamlit==1.52.1
 ml_collections==1.1.0
+python-multipart==0.0.20

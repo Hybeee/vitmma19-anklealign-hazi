@@ -1,8 +1,356 @@
-[2025-12-11 00:58:27,908] [INFO] - Loading trained model: anklealign_vit
-[2025-12-11 00:58:28,198] [INFO] - Running inference on 5 images...
-[2025-12-11 00:58:28,494] [INFO] - Result {i}: PREDICTED_CLASS - TRUE CLASS | CONFIDENCE | STATUS
-[2025-12-11 00:58:29,046] [INFO] - Result 1: Pronacio - Pronacio | 58.45 | PASS
-[2025-12-11 00:58:29,099] [INFO] - Result 2: Neutralis - Neutralis | 63.55 | PASS
-[2025-12-11 00:58:29,148] [INFO] - Result 3: Pronacio - Pronacio | 53.72 | PASS
-[2025-12-11 00:58:29,208] [INFO] - Result 4: Pronacio - Szupinacio | 48.81 | FAIL
-[2025-12-11 00:58:29,261] [INFO] - Result 5: Pronacio - Pronacio | 58.46 | PASS
+[2025-12-11 23:56:57,719] [INFO] - ============================================================
+[2025-12-11 23:56:57,719] [INFO] -           CONFIGURATION
+[2025-12-11 23:56:57,719] [INFO] - ============================================================
+[2025-12-11 23:56:57,719] [INFO] - 
+{   'batch_size': 16,
+    'cj_brightness': 0.2,
+    'cj_contrast': 0.2,
+    'cj_saturation': 0.2,
+    'classes': {0: 'Pronacio', 1: 'Neutralis', 2: 'Szupinacio'},
+    'data_dir': 'data',
+    'device': 'cuda',
+    'early_stopping': 5,
+    'epochs': 100,
+    'loss_name': 'ce',
+    'lr': 1e-05,
+    'min_brightness_mean': 40.0,
+    'min_contrast_std': 10.0,
+    'model_alias': 'aa_vit',
+    'model_choice': 'vit',
+    'model_name': 'anklealign_vit',
+    'norm_mean': [0.5, 0.5, 0.5],
+    'norm_std': [0.5, 0.5, 0.5],
+    'optimizer': 'adam',
+    'output_dir': 'outputs\\20251211_235655_aa_vit',
+    'resolution': 224,
+    'rotation': 15,
+    'save_dupes': True,
+    'save_lq': True,
+    'save_split_results': True,
+    'seed': 42,
+    'sharpness_threshold': 40,
+    'similarity_threshold': 0.0001,
+    'use_label_weights': True,
+    'use_padding': True,
+    'vitargs': {   'download_url': 'https://storage.googleapis.com/vit_models/imagenet21k/ViT-B_16.npz',
+                   'frozen_weights': False,
+                   'pretrained_weights_path': 'assets\\pretrained_weights\\imagenet21k_ViT-B_16.npz',
+                   'vit_model': 'ViT-B_16'}}
+[2025-12-11 23:56:57,719] [INFO] - ============================================================
+[2025-12-11 23:56:57,719] [INFO] - Preparing data for pipeline from: data\all_data.
+[2025-12-11 23:56:57,986] [WARNING] - Skipping: data\all_data\C6037J\internet_freepik_02.jpg. Error: Image cannot be read, file is possibly corrupted.
+[2025-12-11 23:57:00,461] [WARNING] - Skipping ECSGGY. Warning: No JSON found in directory.
+[2025-12-11 23:57:03,131] [WARNING] - Skipping GI9Y8B. Warning: No JSON found in directory.
+[2025-12-11 23:57:06,348] [WARNING] - Skipping: data\all_data\ITWQ3V\sajat_reszvevo01_02.jpg. Error: list index out of range
+[2025-12-11 23:57:06,532] [WARNING] - Skipping: data\all_data\NC1O2T\internet_google_01.jpg. Error: Image cannot be read, file is possibly corrupted.
+[2025-12-11 23:57:08,766] [WARNING] - Skipping: data\all_data\ODZF0M\20.png. Error: Path does not exist.
+[2025-12-11 23:57:11,170] [INFO] - Data Preparation Summary
+[2025-12-11 23:57:11,170] [INFO] - 	Total data count: 325
+[2025-12-11 23:57:11,170] [INFO] - 	Total processed and saved images: 321
+[2025-12-11 23:57:11,170] [INFO] - 	Image array shape: (321, 224, 224, 3)
+[2025-12-11 23:57:11,170] [INFO] - 	Label array shape: (321,)
+[2025-12-11 23:57:11,170] [INFO] - Prepared data saved to: data\numpy_all_data
+[2025-12-11 23:57:14,979] [INFO] - Cleaning data...
+[2025-12-11 23:57:15,114] [INFO] - Excluding duplicates
+[2025-12-11 23:58:35,873] [INFO] - Total duplicates found: 17.
+[2025-12-11 23:58:35,873] [INFO] - 	Duplicate indices: [[4, 97], [21, 62], [21, 77], [21, 99], [21, 158], [33, 160], [34, 159], [53, 225], [57, 75], [57, 96], [57, 230], [76, 98], [122, 213], [124, 214], [125, 204], [126, 203], [157, 232]]
+[2025-12-11 23:58:35,873] [INFO] - Excluding low quality images
+[2025-12-11 23:58:36,045] [INFO] - Finished quality control. Total images excluded: 0
+[2025-12-11 23:58:36,103] [INFO] - Finished data cleaning
+[2025-12-11 23:58:36,103] [INFO] - Remaining images shape: (304, 224, 224, 3)
+[2025-12-11 23:58:36,103] [INFO] - Remaining labels shape: (304,)
+[2025-12-11 23:58:36,270] [INFO] - Prepared data saved to: data\cleaned_numpy_data
+[2025-12-11 23:58:45,826] [INFO] - Creating splits...
+[2025-12-11 23:58:46,028] [INFO] - Created splits
+[2025-12-11 23:58:46,028] [INFO] - Train images and labels shape: (243, 224, 224, 3) - (243,)
+[2025-12-11 23:58:46,028] [INFO] - Val images and labels shape: (30, 224, 224, 3) - (30,)
+[2025-12-11 23:58:46,028] [INFO] - Test images and labels shape: (31, 224, 224, 3) - (31,)
+[2025-12-11 23:58:46,262] [INFO] - Saved split result plots
+[2025-12-11 23:58:50,934] [INFO] - Initializing model: anklealign_vit
+[2025-12-11 23:58:51,986] [INFO] - Weights found at: assets\pretrained_weights\imagenet21k_ViT-B_16.npz
+[2025-12-11 23:58:53,950] [INFO] - Model Architecture Summary:
+
+===============================================================================================
+Layer (type:depth-idx)                        Output Shape              Param #
+===============================================================================================
+VisionTransformer                             [16, 3]                   --
+├─Transformer: 1-1                            [16, 197, 768]            --
+│    └─Embeddings: 2-1                        [16, 197, 768]            152,064
+│    │    └─Conv2d: 3-1                       [16, 768, 14, 14]         590,592
+│    │    └─Dropout: 3-2                      [16, 197, 768]            --
+│    └─Encoder: 2-2                           [16, 197, 768]            --
+│    │    └─ModuleList: 3-3                   --                        85,054,464
+│    │    └─LayerNorm: 3-4                    [16, 197, 768]            1,536
+├─Linear: 1-2                                 [16, 3]                   2,307
+===============================================================================================
+Total params: 85,800,963
+Trainable params: 85,800,963
+Non-trainable params: 0
+Total mult-adds (Units.GIGABYTES): 3.21
+===============================================================================================
+Input size (MB): 9.63
+Forward/backward pass size (MB): 2594.93
+Params size (MB): 342.60
+Estimated Total Size (MB): 2947.16
+===============================================================================================
+[2025-12-11 23:58:53,950] [INFO] - Calculating weights for classes.
+[2025-12-11 23:58:53,950] [INFO] - Pronacio: Count = 97, Weight = 0.8350515463917526
+[2025-12-11 23:58:53,950] [INFO] - Neutralis: Count = 108, Weight = 0.75
+[2025-12-11 23:58:53,950] [INFO] - Szupinacio: Count = 38, Weight = 2.1315789473684212
+[2025-12-11 23:59:02,442] [INFO] - Epoch = 0
+[2025-12-11 23:59:02,442] [INFO] - 	Training loss = 1.0983251253763835
+[2025-12-11 23:59:02,452] [INFO] - 	Training accuracy = 43.333333333333336
+[2025-12-11 23:59:03,178] [INFO] - 	Validation loss = 1.0979053378105164
+[2025-12-11 23:59:03,178] [INFO] - 	Validation accuracy = 40.0
+[2025-12-11 23:59:03,178] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-11 23:59:12,259] [INFO] - Epoch = 1
+[2025-12-11 23:59:12,259] [INFO] - 	Training loss = 1.0968870798746744
+[2025-12-11 23:59:12,259] [INFO] - 	Training accuracy = 51.666666666666664
+[2025-12-11 23:59:12,963] [INFO] - 	Validation loss = 1.0966331958770752
+[2025-12-11 23:59:12,966] [INFO] - 	Validation accuracy = 40.0
+[2025-12-11 23:59:12,966] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-11 23:59:22,076] [INFO] - Epoch = 2
+[2025-12-11 23:59:22,076] [INFO] - 	Training loss = 1.0946839570999145
+[2025-12-11 23:59:22,076] [INFO] - 	Training accuracy = 56.666666666666664
+[2025-12-11 23:59:22,768] [INFO] - 	Validation loss = 1.0952434539794922
+[2025-12-11 23:59:22,768] [INFO] - 	Validation accuracy = 40.0
+[2025-12-11 23:59:22,768] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-11 23:59:31,854] [INFO] - Epoch = 3
+[2025-12-11 23:59:31,856] [INFO] - 	Training loss = 1.0914672136306762
+[2025-12-11 23:59:31,857] [INFO] - 	Training accuracy = 58.333333333333336
+[2025-12-11 23:59:32,558] [INFO] - 	Validation loss = 1.0928701758384705
+[2025-12-11 23:59:32,558] [INFO] - 	Validation accuracy = 43.333333333333336
+[2025-12-11 23:59:32,558] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-11 23:59:41,598] [INFO] - Epoch = 4
+[2025-12-11 23:59:41,598] [INFO] - 	Training loss = 1.0862375259399415
+[2025-12-11 23:59:41,599] [INFO] - 	Training accuracy = 63.75
+[2025-12-11 23:59:42,290] [INFO] - 	Validation loss = 1.0895464420318604
+[2025-12-11 23:59:42,290] [INFO] - 	Validation accuracy = 43.333333333333336
+[2025-12-11 23:59:42,294] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-11 23:59:51,392] [INFO] - Epoch = 5
+[2025-12-11 23:59:51,397] [INFO] - 	Training loss = 1.0795258283615112
+[2025-12-11 23:59:51,397] [INFO] - 	Training accuracy = 65.41666666666667
+[2025-12-11 23:59:52,155] [INFO] - 	Validation loss = 1.0845174193382263
+[2025-12-11 23:59:52,156] [INFO] - 	Validation accuracy = 43.333333333333336
+[2025-12-11 23:59:52,156] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:00:02,137] [INFO] - Epoch = 6
+[2025-12-12 00:00:02,137] [INFO] - 	Training loss = 1.0723078489303588
+[2025-12-12 00:00:02,137] [INFO] - 	Training accuracy = 63.333333333333336
+[2025-12-12 00:00:02,916] [INFO] - 	Validation loss = 1.0786374807357788
+[2025-12-12 00:00:02,916] [INFO] - 	Validation accuracy = 46.666666666666664
+[2025-12-12 00:00:02,916] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:00:13,003] [INFO] - Epoch = 7
+[2025-12-12 00:00:13,005] [INFO] - 	Training loss = 1.062218976020813
+[2025-12-12 00:00:13,005] [INFO] - 	Training accuracy = 65.83333333333333
+[2025-12-12 00:00:13,794] [INFO] - 	Validation loss = 1.0718629956245422
+[2025-12-12 00:00:13,794] [INFO] - 	Validation accuracy = 46.666666666666664
+[2025-12-12 00:00:13,794] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:00:24,006] [INFO] - Epoch = 8
+[2025-12-12 00:00:24,006] [INFO] - 	Training loss = 1.051075267791748
+[2025-12-12 00:00:24,006] [INFO] - 	Training accuracy = 70.0
+[2025-12-12 00:00:24,802] [INFO] - 	Validation loss = 1.063923954963684
+[2025-12-12 00:00:24,802] [INFO] - 	Validation accuracy = 53.333333333333336
+[2025-12-12 00:00:24,802] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:00:35,012] [INFO] - Epoch = 9
+[2025-12-12 00:00:35,012] [INFO] - 	Training loss = 1.0387215534845988
+[2025-12-12 00:00:35,012] [INFO] - 	Training accuracy = 70.83333333333333
+[2025-12-12 00:00:35,816] [INFO] - 	Validation loss = 1.0572534799575806
+[2025-12-12 00:00:35,816] [INFO] - 	Validation accuracy = 60.0
+[2025-12-12 00:00:35,816] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:00:46,025] [INFO] - Epoch = 10
+[2025-12-12 00:00:46,025] [INFO] - 	Training loss = 1.0255042791366578
+[2025-12-12 00:00:46,025] [INFO] - 	Training accuracy = 75.0
+[2025-12-12 00:00:46,829] [INFO] - 	Validation loss = 1.0503217577934265
+[2025-12-12 00:00:46,829] [INFO] - 	Validation accuracy = 56.666666666666664
+[2025-12-12 00:00:46,829] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:00:57,051] [INFO] - Epoch = 11
+[2025-12-12 00:00:57,051] [INFO] - 	Training loss = 1.009777796268463
+[2025-12-12 00:00:57,051] [INFO] - 	Training accuracy = 75.41666666666667
+[2025-12-12 00:00:57,837] [INFO] - 	Validation loss = 1.036358118057251
+[2025-12-12 00:00:57,843] [INFO] - 	Validation accuracy = 60.0
+[2025-12-12 00:00:57,843] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:01:08,039] [INFO] - Epoch = 12
+[2025-12-12 00:01:08,039] [INFO] - 	Training loss = 0.9942882180213928
+[2025-12-12 00:01:08,039] [INFO] - 	Training accuracy = 76.66666666666667
+[2025-12-12 00:01:08,834] [INFO] - 	Validation loss = 1.0275304317474365
+[2025-12-12 00:01:08,834] [INFO] - 	Validation accuracy = 60.0
+[2025-12-12 00:01:08,834] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:01:19,057] [INFO] - Epoch = 13
+[2025-12-12 00:01:19,057] [INFO] - 	Training loss = 0.9781957228978475
+[2025-12-12 00:01:19,057] [INFO] - 	Training accuracy = 82.5
+[2025-12-12 00:01:19,853] [INFO] - 	Validation loss = 1.0094622671604156
+[2025-12-12 00:01:19,853] [INFO] - 	Validation accuracy = 60.0
+[2025-12-12 00:01:19,853] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:01:30,027] [INFO] - Epoch = 14
+[2025-12-12 00:01:30,027] [INFO] - 	Training loss = 0.9596092979113261
+[2025-12-12 00:01:30,028] [INFO] - 	Training accuracy = 79.58333333333333
+[2025-12-12 00:01:30,828] [INFO] - 	Validation loss = 1.0075514316558838
+[2025-12-12 00:01:30,828] [INFO] - 	Validation accuracy = 63.333333333333336
+[2025-12-12 00:01:30,830] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:01:41,034] [INFO] - Epoch = 15
+[2025-12-12 00:01:41,034] [INFO] - 	Training loss = 0.9390943010648092
+[2025-12-12 00:01:41,034] [INFO] - 	Training accuracy = 83.33333333333333
+[2025-12-12 00:01:41,838] [INFO] - 	Validation loss = 1.01021146774292
+[2025-12-12 00:01:41,838] [INFO] - 	Validation accuracy = 70.0
+[2025-12-12 00:01:41,838] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:01:50,968] [INFO] - Epoch = 16
+[2025-12-12 00:01:50,968] [INFO] - 	Training loss = 0.9225773652394612
+[2025-12-12 00:01:50,969] [INFO] - 	Training accuracy = 81.66666666666667
+[2025-12-12 00:01:51,768] [INFO] - 	Validation loss = 0.9902765154838562
+[2025-12-12 00:01:51,768] [INFO] - 	Validation accuracy = 63.333333333333336
+[2025-12-12 00:01:51,768] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:02:02,097] [INFO] - Epoch = 17
+[2025-12-12 00:02:02,097] [INFO] - 	Training loss = 0.9031519015630086
+[2025-12-12 00:02:02,097] [INFO] - 	Training accuracy = 85.83333333333333
+[2025-12-12 00:02:02,900] [INFO] - 	Validation loss = 0.9630396664142609
+[2025-12-12 00:02:02,900] [INFO] - 	Validation accuracy = 66.66666666666667
+[2025-12-12 00:02:02,900] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:02:13,167] [INFO] - Epoch = 18
+[2025-12-12 00:02:13,167] [INFO] - 	Training loss = 0.8856056094169616
+[2025-12-12 00:02:13,167] [INFO] - 	Training accuracy = 86.25
+[2025-12-12 00:02:13,980] [INFO] - 	Validation loss = 0.95192950963974
+[2025-12-12 00:02:13,980] [INFO] - 	Validation accuracy = 66.66666666666667
+[2025-12-12 00:02:13,980] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:02:24,217] [INFO] - Epoch = 19
+[2025-12-12 00:02:24,217] [INFO] - 	Training loss = 0.8627836068471273
+[2025-12-12 00:02:24,217] [INFO] - 	Training accuracy = 86.66666666666667
+[2025-12-12 00:02:25,023] [INFO] - 	Validation loss = 0.9605976343154907
+[2025-12-12 00:02:25,023] [INFO] - 	Validation accuracy = 63.333333333333336
+[2025-12-12 00:02:25,023] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:02:34,225] [INFO] - Epoch = 20
+[2025-12-12 00:02:34,225] [INFO] - 	Training loss = 0.843300978342692
+[2025-12-12 00:02:34,225] [INFO] - 	Training accuracy = 88.75
+[2025-12-12 00:02:35,048] [INFO] - 	Validation loss = 0.929965078830719
+[2025-12-12 00:02:35,048] [INFO] - 	Validation accuracy = 60.0
+[2025-12-12 00:02:35,048] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:02:45,357] [INFO] - Epoch = 21
+[2025-12-12 00:02:45,357] [INFO] - 	Training loss = 0.826897160212199
+[2025-12-12 00:02:45,357] [INFO] - 	Training accuracy = 90.41666666666667
+[2025-12-12 00:02:46,168] [INFO] - 	Validation loss = 0.9257204234600067
+[2025-12-12 00:02:46,168] [INFO] - 	Validation accuracy = 63.333333333333336
+[2025-12-12 00:02:46,168] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:02:56,489] [INFO] - Epoch = 22
+[2025-12-12 00:02:56,489] [INFO] - 	Training loss = 0.8105354189872742
+[2025-12-12 00:02:56,489] [INFO] - 	Training accuracy = 90.41666666666667
+[2025-12-12 00:02:57,290] [INFO] - 	Validation loss = 0.9184897840023041
+[2025-12-12 00:02:57,290] [INFO] - 	Validation accuracy = 53.333333333333336
+[2025-12-12 00:02:57,295] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:03:07,579] [INFO] - Epoch = 23
+[2025-12-12 00:03:07,579] [INFO] - 	Training loss = 0.7943933804829916
+[2025-12-12 00:03:07,579] [INFO] - 	Training accuracy = 91.25
+[2025-12-12 00:03:08,391] [INFO] - 	Validation loss = 0.9199264347553253
+[2025-12-12 00:03:08,391] [INFO] - 	Validation accuracy = 46.666666666666664
+[2025-12-12 00:03:08,391] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:03:17,661] [INFO] - Epoch = 24
+[2025-12-12 00:03:17,661] [INFO] - 	Training loss = 0.7781447609265645
+[2025-12-12 00:03:17,661] [INFO] - 	Training accuracy = 90.83333333333333
+[2025-12-12 00:03:18,467] [INFO] - 	Validation loss = 0.8908369243144989
+[2025-12-12 00:03:18,467] [INFO] - 	Validation accuracy = 53.333333333333336
+[2025-12-12 00:03:18,467] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:03:28,749] [INFO] - Epoch = 25
+[2025-12-12 00:03:28,749] [INFO] - 	Training loss = 0.7528912822405497
+[2025-12-12 00:03:28,749] [INFO] - 	Training accuracy = 92.91666666666667
+[2025-12-12 00:03:29,553] [INFO] - 	Validation loss = 0.8803023993968964
+[2025-12-12 00:03:29,553] [INFO] - 	Validation accuracy = 70.0
+[2025-12-12 00:03:29,553] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:03:39,931] [INFO] - Epoch = 26
+[2025-12-12 00:03:39,931] [INFO] - 	Training loss = 0.7417653401692709
+[2025-12-12 00:03:39,935] [INFO] - 	Training accuracy = 92.91666666666667
+[2025-12-12 00:03:40,724] [INFO] - 	Validation loss = 0.9171083867549896
+[2025-12-12 00:03:40,724] [INFO] - 	Validation accuracy = 63.333333333333336
+[2025-12-12 00:03:40,724] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:03:49,802] [INFO] - Epoch = 27
+[2025-12-12 00:03:49,806] [INFO] - 	Training loss = 0.7125473260879517
+[2025-12-12 00:03:49,806] [INFO] - 	Training accuracy = 97.08333333333333
+[2025-12-12 00:03:50,592] [INFO] - 	Validation loss = 0.8879863917827606
+[2025-12-12 00:03:50,592] [INFO] - 	Validation accuracy = 50.0
+[2025-12-12 00:03:50,592] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:03:59,665] [INFO] - Epoch = 28
+[2025-12-12 00:03:59,665] [INFO] - 	Training loss = 0.6898323655128479
+[2025-12-12 00:03:59,665] [INFO] - 	Training accuracy = 97.08333333333333
+[2025-12-12 00:04:00,457] [INFO] - 	Validation loss = 0.8845107555389404
+[2025-12-12 00:04:00,462] [INFO] - 	Validation accuracy = 53.333333333333336
+[2025-12-12 00:04:00,463] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:04:09,504] [INFO] - Epoch = 29
+[2025-12-12 00:04:09,504] [INFO] - 	Training loss = 0.6677993893623352
+[2025-12-12 00:04:09,504] [INFO] - 	Training accuracy = 97.91666666666667
+[2025-12-12 00:04:10,298] [INFO] - 	Validation loss = 0.8560399115085602
+[2025-12-12 00:04:10,298] [INFO] - 	Validation accuracy = 56.666666666666664
+[2025-12-12 00:04:10,298] [INFO] - Validation loss has decreased. Saving model to: outputs\20251211_235655_aa_vit
+[2025-12-12 00:04:20,378] [INFO] - Epoch = 30
+[2025-12-12 00:04:20,378] [INFO] - 	Training loss = 0.6491225282351176
+[2025-12-12 00:04:20,378] [INFO] - 	Training accuracy = 98.33333333333333
+[2025-12-12 00:04:21,177] [INFO] - 	Validation loss = 0.8685106337070465
+[2025-12-12 00:04:21,178] [INFO] - 	Validation accuracy = 56.666666666666664
+[2025-12-12 00:04:21,178] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:04:30,152] [INFO] - Epoch = 31
+[2025-12-12 00:04:30,152] [INFO] - 	Training loss = 0.6328700184822083
+[2025-12-12 00:04:30,152] [INFO] - 	Training accuracy = 98.33333333333333
+[2025-12-12 00:04:30,942] [INFO] - 	Validation loss = 0.8722829818725586
+[2025-12-12 00:04:30,942] [INFO] - 	Validation accuracy = 56.666666666666664
+[2025-12-12 00:04:30,942] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:04:39,903] [INFO] - Epoch = 32
+[2025-12-12 00:04:39,903] [INFO] - 	Training loss = 0.6094866712888082
+[2025-12-12 00:04:39,903] [INFO] - 	Training accuracy = 99.16666666666667
+[2025-12-12 00:04:40,697] [INFO] - 	Validation loss = 0.8695392906665802
+[2025-12-12 00:04:40,697] [INFO] - 	Validation accuracy = 56.666666666666664
+[2025-12-12 00:04:40,697] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:04:49,668] [INFO] - Epoch = 33
+[2025-12-12 00:04:49,668] [INFO] - 	Training loss = 0.5963675777117411
+[2025-12-12 00:04:49,678] [INFO] - 	Training accuracy = 98.75
+[2025-12-12 00:04:50,450] [INFO] - 	Validation loss = 0.9021466970443726
+[2025-12-12 00:04:50,450] [INFO] - 	Validation accuracy = 50.0
+[2025-12-12 00:04:50,450] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:04:59,414] [INFO] - Epoch = 34
+[2025-12-12 00:04:59,414] [INFO] - 	Training loss = 0.592411478360494
+[2025-12-12 00:04:59,414] [INFO] - 	Training accuracy = 97.91666666666667
+[2025-12-12 00:05:00,201] [INFO] - 	Validation loss = 0.8815562427043915
+[2025-12-12 00:05:00,202] [INFO] - 	Validation accuracy = 40.0
+[2025-12-12 00:05:00,202] [INFO] - Validation loss has not decreased.
+[2025-12-12 00:05:00,202] [INFO] - Early stopping threshold reached. Training completed.
+[2025-12-12 00:05:11,785] [INFO] - Loading trained model: anklealign_vit
+[2025-12-12 00:05:12,139] [INFO] - Running evaluation on model: anklealign_vit
+[2025-12-12 00:05:12,139] [INFO] - Calculating weights for classes.
+[2025-12-12 00:05:12,139] [INFO] - Pronacio: Count = 97, Weight = 0.8350515463917526
+[2025-12-12 00:05:12,139] [INFO] - Neutralis: Count = 108, Weight = 0.75
+[2025-12-12 00:05:12,139] [INFO] - Szupinacio: Count = 38, Weight = 2.1315789473684212
+[2025-12-12 00:05:13,304] [INFO] - Evaluation results
+[2025-12-12 00:05:13,304] [INFO] - Average loss: 0.9666
+[2025-12-12 00:05:13,304] [INFO] - Accuracy: 0.6452
+[2025-12-12 00:05:13,306] [INFO] - Confusion matrix:
+array([[10,  1,  1],
+       [ 6,  8,  0],
+       [ 1,  2,  2]], dtype=int64)
+[2025-12-12 00:05:13,307] [INFO] - Classification report (per-class metrics):
+{   'Neutralis': {   'f1-score': 0.64,
+                     'precision': 0.7272727272727273,
+                     'recall': 0.5714285714285714,
+                     'support': 14.0},
+    'Pronacio': {   'f1-score': 0.6896551724137931,
+                    'precision': 0.5882352941176471,
+                    'recall': 0.8333333333333334,
+                    'support': 12.0},
+    'Szupinacio': {   'f1-score': 0.5,
+                      'precision': 0.6666666666666666,
+                      'recall': 0.4,
+                      'support': 5.0},
+    'accuracy': 0.6451612903225806,
+    'macro avg': {   'f1-score': 0.6098850574712644,
+                     'precision': 0.6607248960190136,
+                     'recall': 0.6015873015873016,
+                     'support': 31.0},
+    'weighted avg': {   'f1-score': 0.6366407119021135,
+                        'precision': 0.663676614340751,
+                        'recall': 0.6451612903225806,
+                        'support': 31.0}}
+[2025-12-12 00:05:13,307] [INFO] - Saving evaluation results and pipeline data to: outputs\20251211_235655_aa_vit\results.json
+[2025-12-12 00:05:13,942] [INFO] - Visualizing attention maps.
+[2025-12-12 00:05:16,753] [INFO] - Attention Map visualization saved to: outputs\20251211_235655_aa_vit\plots\attention_maps
+[2025-12-12 00:05:25,139] [INFO] - Loading trained model: anklealign_vit
+[2025-12-12 00:05:25,440] [INFO] - Running inference on 5 images...
+[2025-12-12 00:05:25,678] [INFO] - Result {i}: PREDICTED_CLASS - TRUE CLASS | CONFIDENCE | STATUS
+[2025-12-12 00:05:26,137] [INFO] - Result 1: Neutralis - Neutralis | 48.91 | PASS
+[2025-12-12 00:05:26,178] [INFO] - Result 2: Szupinacio - Pronacio | 41.78 | FAIL
+[2025-12-12 00:05:26,204] [INFO] - Result 3: Szupinacio - Szupinacio | 43.59 | PASS
+[2025-12-12 00:05:26,242] [INFO] - Result 4: Pronacio - Pronacio | 49.47 | PASS
+[2025-12-12 00:05:26,279] [INFO] - Result 5: Neutralis - Neutralis | 51.12 | PASS

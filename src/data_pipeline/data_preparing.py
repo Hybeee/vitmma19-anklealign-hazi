@@ -48,8 +48,10 @@ def _resize_with_padding(args: Args, image):
 def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--timestamp", type=str, required=True)
+    parser.add_argument("--logs_dir_write", type=bool, required=True)
     args_cli = parser.parse_args()
     timestamp = args_cli.timestamp
+    logs_dir_write = args_cli.logs_dir_write
 
     args = Args()
     args.output_dir = os.path.join("outputs", f"{timestamp}_{args.model_alias}")
@@ -59,7 +61,7 @@ def main():
     os.makedirs(output_plots_dir, exist_ok=True)
 
     log_dir = args.output_dir
-    args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir)
+    args.logger = utils.get_logger(timestamp=timestamp, log_dir=log_dir, logs_dir_write=logs_dir_write)
 
     args.log_config()
 

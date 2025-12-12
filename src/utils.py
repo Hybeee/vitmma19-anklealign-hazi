@@ -1,6 +1,7 @@
 import os
 import logging
 from collections import Counter
+import sys
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -31,7 +32,7 @@ def save_plots(args: Args, train_loss, train_accuracy, val_loss, val_accuracy):
     plt.savefig(os.path.join(args.output_dir, "plots", 'accuracy_curve.png'))
     plt.close()
 
-def get_logger(timestamp: str, log_dir: str="logs"):
+def get_logger(timestamp: str, log_dir: str="logs", logs_dir_write=False):
     os.makedirs(log_dir, exist_ok=True)
 
     general_log_dir = "logs"
@@ -41,7 +42,7 @@ def get_logger(timestamp: str, log_dir: str="logs"):
     logger.setLevel(logging.INFO)
 
     if not logger.handlers:
-        ch = logging.StreamHandler()
+        ch = logging.StreamHandler(sys.stdout)
         ch.setLevel(logging.INFO)
         formatter = logging.Formatter('[%(asctime)s] [%(levelname)s] - %(message)s')
         ch.setFormatter(formatter)
@@ -52,7 +53,10 @@ def get_logger(timestamp: str, log_dir: str="logs"):
         fh.setFormatter(formatter)
         logger.addHandler(fh)
 
-        general_fh = logging.FileHandler(os.path.join(general_log_dir, f"run.log"), encoding='utf-8', mode='w')
+        if logs_dir_write:
+            general_fh = logging.FileHandler(os.path.join(general_log_dir, f"run.log"), encoding='utf-8', mode='w')
+        else:
+            general_fh = logging.FileHandler(os.path.join(general_log_dir, f"run.log"), encoding='utf-8', mode='a')
         general_fh.setLevel(logging.INFO)
         general_fh.setFormatter(formatter)
         logger.addHandler(general_fh)
