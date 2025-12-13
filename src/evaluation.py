@@ -308,7 +308,7 @@ def main():
 
     result = evaluate_model(args=args, model=model, eval_loader=test_loader, f_loss=f_loss)
 
-    args.logger.info(f"Saving evaluation results and pipeline data to: {args.output_dir}\\results.json")
+    args.logger.info(f"Saving evaluation results and pipeline data to: {os.path.join(args.output_dir, 'results.json')}")
 
     save_result(args=args, result=result, timestamp=timestamp)
 
