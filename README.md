@@ -34,6 +34,8 @@ Follow these steps to prepare the data for the pipeline:
 2. Download zip.
 3. Extract zip into `data/all_data`.
     - Note: This is the same `data/` folder that should be mounted to docker.
+4. Check all folders in `data/all_data`. All images must be directly inside `data/all_data/{NEPTUN}`. If you find any subfolders (e.g, `.../{NEPTUN}/extra_folder/img.jpg`), move the images up to the main NEPTUN folder and delete the empty subfolder.
+    - _Warning_: Images left in sub-subfolders will be ignored by the pipeline.
 
 **NOTE**: There's a new zip at `sharepoint_root/` called `anklealign.zip`. This should be the exact same zip as the one downloaded in step 1. Make sure the folder structure looks like the following after extracting the files: `data/all_data/{NEPTUN}/...`
 
