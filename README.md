@@ -129,6 +129,7 @@ The backend exposes an endpoint called `/predict`. The endpoint expects the raw 
 
 The demo can be started by following the steps listed below:
 - Open two terminals
+- Install requirements using: `pip install -r requirements.txt` (using one of the terminals).
 - Navigate to the project root in both terminals
 - Enter the following commands:
     - frontend: `streamlit run src/ui.py`
